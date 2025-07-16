@@ -1,11 +1,16 @@
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using MovieApi.Data;
-using MovieApi.Data.Configurations;
-using MovieApi.Extensions;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using MovieApi.ExtensionsDependencyInjection;
+using MovieCore.DomainContracts;
+using MovieCore.Models.Exceptions;
+using MovieData.Data;
+using MovieData.Extensions;
+using MovieData.Data.Configurations;
+using MovieData.Repositories;
+using MoviePresentation;
+
 
 namespace MovieApi
 {
@@ -25,7 +30,7 @@ namespace MovieApi
 			{
 				opt.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
 				{
-					Title = "Movie API",
+					Title = "VideoMovie API",
 					Version = "v1"
 				});
 				opt.EnableAnnotations();
@@ -35,7 +40,16 @@ namespace MovieApi
 				config.AddProfile<MapperProfile>()
 			);
 
-			builder.Services.AddControllers();
+			builder.Services.AddControllers()
+				// Makes ASP.NET Core look for controllers in another project (MoviePresentation in this case).
+				.AddApplicationPart(typeof(AssemblyReference).Assembly);
+
+			// "AddScoped" is chosen, because context is scoped. As such the lifetime of the service needs
+			// to match. 
+			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+
+			builder.Services.AddServiceLayer();
 
 
 			// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -43,6 +57,58 @@ namespace MovieApi
 
 
 			var app = builder.Build();
+
+			app.UseExceptionHandler(builder =>
+			{
+				builder.Run(async context =>
+				{
+					var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+
+					if (contextFeature != null)
+					{
+						var problemDetailsFactory = app.Services.GetRequiredService<ProblemDetailsFactory>();
+
+						ProblemDetails problemDetails;
+						int statusCode;
+
+						switch (contextFeature.Error)
+						{
+							case MovieNotFoundException movieNotFoundException: // VideoMovie Not Found
+								statusCode = StatusCodes.Status404NotFound;
+								problemDetails = problemDetailsFactory.CreateProblemDetails(
+									context,
+									statusCode,
+									title: movieNotFoundException.Title,
+									detail: movieNotFoundException.Message,
+									instance: context.Request.Path
+								);
+								break;
+							case MovieGenreNotFoundException movieGenreNotFoundException: // VideoMovie Genre Not Found
+								statusCode = StatusCodes.Status404NotFound;
+								problemDetails = problemDetailsFactory.CreateProblemDetails(
+									context,
+									statusCode,
+									title: movieGenreNotFoundException.Title,
+									detail: movieGenreNotFoundException.Message,
+									instance: context.Request.Path
+								);
+								break;
+							default:
+								statusCode = StatusCodes.Status500InternalServerError;  // General server error
+								problemDetails = problemDetailsFactory.CreateProblemDetails(
+										context,
+										statusCode,
+										title: "Internal Server Error",
+										detail: contextFeature.Error.Message,
+										instance: context.Request.Path);
+								break;
+						}
+
+						context.Response.StatusCode = statusCode;
+						await context.Response.WriteAsJsonAsync(problemDetails);
+					}
+				});
+			});
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
@@ -52,8 +118,7 @@ namespace MovieApi
 				app.UseSwaggerUI(options =>
 				{
 					// Tell it exactly where the JSON file is
-					options.SwaggerEndpoint("/swagger/v1/swagger.json", "Movie API V1");
-					//options.RoutePrefix = string.Empty; // So it shows at https://localhost:7120/
+					options.SwaggerEndpoint("/swagger/v1/swagger.json", "VideoMovie API V1");
 				});
 				await app.SeedData();
 			}
@@ -62,7 +127,6 @@ namespace MovieApi
 			app.UseHttpsRedirection();
 
 			app.UseAuthorization();
-
 
 			app.MapControllers();
 

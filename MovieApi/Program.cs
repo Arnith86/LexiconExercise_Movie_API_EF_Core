@@ -58,6 +58,7 @@ namespace MovieApi
 
 			var app = builder.Build();
 
+			// Todo: Extract to extension method.
 			app.UseExceptionHandler(builder =>
 			{
 				builder.Run(async context =>

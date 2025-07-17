@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieCore.Models.DTOs.MovieDtos;
 using Services.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json;
 
 namespace MovieApi.Controllers;
 
@@ -20,7 +21,7 @@ public class MoviesController : ControllerBase
 	}
 
 
-	// GET: api/Movies
+	// GET: api/Movies?pageSize=20&page=3
 	/// <summary>
 	/// Retrieves all registered movies with basic details and their associated genre.
 	/// </summary>
@@ -35,8 +36,16 @@ public class MoviesController : ControllerBase
 		Summary = "Retrieve all movies",
 		Description = "Returns a simplified list of all registered movies including basic details and genre.")]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieWithGenreDto>))]
-	public async Task<ActionResult<IEnumerable<MovieWithGenreDto>>> GetMovies() =>
-			Ok(await _serviceManager.MovieServices.GetAllMoviesAsync());
+	public async Task<ActionResult<IEnumerable<MovieWithGenreDto>>> GetMovies( 
+		[FromQuery] int pageSize, 
+		[FromQuery] int page)
+	{
+		var (movieDtos, paginationMetaData) = 
+			await _serviceManager.MovieServices.GetAllMoviesAsync(pageSize, page);
+
+		Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetaData));
+		return Ok(movieDtos);
+	} 
 
 
 	// GET: api/Movies/5

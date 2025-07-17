@@ -42,12 +42,20 @@ public class MoviesServices : IMoviesServices
 	}
 
 	/// <inheritdoc/>
-	public async Task<IEnumerable<MovieWithGenreDto>> GetAllMoviesAsync()
-	{
-		var movie = await _unitOfWork.Movies.GetAllMoviesAsync(changeTracker: false);
+	public async Task<int> CountAsync() => await _unitOfWork.Movies.CountAsync();
 
-		return _mapper.Map<IEnumerable<MovieWithGenreDto>>(movie);
+	/// <inheritdoc/>
+	public async Task<(IEnumerable<MovieWithGenreDto>, IPaginationMetaData)> GetAllMoviesAsync(int pageSize, int page)
+	{
+		var (setPageSize, setPage) = SetPageVariables(pageSize, page);
+		int totalItemCount = await CountAsync();
+
+		var paginationMetaData = new PaginationMetaData(totalItemCount, setPage, setPageSize);
+		var pagedMovieWithGenreDto = await _unitOfWork.Movies.GetAllMoviesAsync(setPageSize, setPage);
+
+		return (_mapper.Map<IEnumerable<MovieWithGenreDto>>(pagedMovieWithGenreDto), paginationMetaData);
 	}
+
 
 	/// <inheritdoc/>
 	public async Task<MovieWithGenreDto> GetMovieAsync(int id)
@@ -55,7 +63,7 @@ public class MoviesServices : IMoviesServices
 		var movie = await _unitOfWork.Movies.GetMovieAsync(id, changeTracker: false);
 
 		if (movie is null) throw new MovieNotFoundException(id);
-		
+
 		return _mapper.Map<MovieWithGenreDto>(movie);
 	}
 
@@ -67,7 +75,7 @@ public class MoviesServices : IMoviesServices
 		);
 
 		if (movieWithGenreDetailsDto is null) throw new MovieNotFoundException(id);
-		
+
 		return movieWithGenreDetailsDto;
 	}
 
@@ -77,7 +85,7 @@ public class MoviesServices : IMoviesServices
 		var movieExists = await _unitOfWork.Movies.AnyAsync(id);
 
 		if (!movieExists) throw new MovieNotFoundException(id);
-		
+
 		return await _unitOfWork.Movies.GetMovieFullDetailsAsync(id, changeTracker: false);
 	}
 
@@ -102,7 +110,7 @@ public class MoviesServices : IMoviesServices
 		var movie = await _unitOfWork.Movies.GetMovieAsync(id, changeTracker: true);
 
 		if (movie is null) throw new MovieNotFoundException(id);
-		
+
 		var genre = await _unitOfWork.MovieGenres.AnyAsync(movieWithGenreIdUpdateDto.MovieGenreId);
 
 		if (!genre) throw new MovieGenreNotFoundException(movieWithGenreIdUpdateDto.MovieGenreId);
@@ -134,4 +142,5 @@ public class MoviesServices : IMoviesServices
 
 		return true;
 	}
+
 }

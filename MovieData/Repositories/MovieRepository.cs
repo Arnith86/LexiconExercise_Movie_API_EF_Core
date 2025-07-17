@@ -21,10 +21,18 @@ public class MovieRepository : RepositoryBase<VideoMovie>, IMovieRepository
 
 	public async Task<bool> AnyAsync(int id) => await FindAnyAsync(m => m.Id.Equals(id));
 
-	public async Task<List<VideoMovie>> GetAllMoviesAsync(bool changeTracker = false) => 
-		await GetAll(changeTracker).Include(m => m.MoviesGenre).ToListAsync();
 
-	public async Task<VideoMovie?> GetMovieAsync(int id, bool changeTracker = false) =>	
+	public async Task<List<VideoMovie>> GetAllMoviesAsync(int pageSize, int page, bool changeTracker = false) =>
+		await GetAll(changeTracker).OrderBy(m => m.Id)
+		.Skip(pageSize * (page - 1))
+		.Take(pageSize)
+		.Include(m => m.MoviesGenre)
+		.ToListAsync();
+
+	//public async Task<List<VideoMovie>> GetAllMoviesAsync(bool changeTracker = false) => 
+	//	await GetAll(changeTracker).Include(m => m.MoviesGenre).ToListAsync();
+
+	public async Task<VideoMovie?> GetMovieAsync(int id, bool changeTracker = false) =>
 		await GetByCondition(m => m.Id.Equals(id), changeTracker)
 				.Include(m => m.MoviesGenre)
 				.FirstOrDefaultAsync();
@@ -35,7 +43,7 @@ public class MovieRepository : RepositoryBase<VideoMovie>, IMovieRepository
 				.Include(mg => mg.MoviesGenre)
 				.FirstOrDefaultAsync();
 
-	public async Task<MovieDetailDto?> GetMovieFullDetailsAsync(int id, bool changeTracker = false) => 
+	public async Task<MovieDetailDto?> GetMovieFullDetailsAsync(int id, bool changeTracker = false) =>
 		await GetByCondition(mfd => mfd.Id.Equals(id))
 			.Include(r => r.Reviews)
 			.Include(md => md.MoviesDetails)

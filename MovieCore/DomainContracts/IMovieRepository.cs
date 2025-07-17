@@ -12,7 +12,7 @@ namespace MovieCore.DomainContracts;
 /// </summary>
 public interface IMovieRepository : IRepositoryQueries<VideoMovie>, IRepositoryActions<VideoMovie>
 {
-	Task<List<VideoMovie>> GetAllMoviesAsync(bool changeTracker = false);
+	Task<List<VideoMovie>> GetAllMoviesAsync(int pageSize, int page, bool changeTracker = false);
 	Task<VideoMovie?> GetMovieAsync(int id, bool changeTracker = false);
 	Task<bool> AnyAsync(int id);
 	Task<VideoMovie?> GetMovieDetailsAsync(int id, bool changeTracker = false);

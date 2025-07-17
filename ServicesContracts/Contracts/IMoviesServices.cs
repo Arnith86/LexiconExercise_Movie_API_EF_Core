@@ -1,4 +1,5 @@
 ﻿using MovieCore.Models.DTOs.MovieDtos;
+using MovieServices;
 
 namespace Services.Contracts.Contracts;
 
@@ -8,10 +9,16 @@ namespace Services.Contracts.Contracts;
 public interface IMoviesServices
 {
 	/// <summary>
+	/// Counts the movie instances. 
+	/// </summary>
+	/// <returns>An integer with the number of movies found.</returns>
+	Task<int> CountAsync();
+
+	/// <summary>
 	/// Retrieves a collection of all movies with their associated genre information.
 	/// </summary>
 	/// <returns>A collection of <see cref="MovieWithGenreDto"/>.</returns>
-	Task<IEnumerable<MovieWithGenreDto>> GetAllMoviesAsync();
+	Task<(IEnumerable<MovieWithGenreDto>, IPaginationMetaData)> GetAllMoviesAsync(int pageSize, int page);
 
 	/// <summary>
 	/// Retrieves a single movie by its ID, including its genre information.

@@ -73,7 +73,7 @@ namespace MovieApi
 
 						switch (contextFeature.Error)
 						{
-							case MovieNotFoundException movieNotFoundException: // VideoMovie Not Found
+							case MovieNotFoundException movieNotFoundException: // Movie Not Found
 								statusCode = StatusCodes.Status404NotFound;
 								problemDetails = problemDetailsFactory.CreateProblemDetails(
 									context,
@@ -83,13 +83,23 @@ namespace MovieApi
 									instance: context.Request.Path
 								);
 								break;
-							case MovieGenreNotFoundException movieGenreNotFoundException: // VideoMovie Genre Not Found
+							case MovieGenreNotFoundException movieGenreNotFoundException: // Movie Genre Not Found
 								statusCode = StatusCodes.Status404NotFound;
 								problemDetails = problemDetailsFactory.CreateProblemDetails(
 									context,
 									statusCode,
 									title: movieGenreNotFoundException.Title,
 									detail: movieGenreNotFoundException.Message,
+									instance: context.Request.Path
+								);
+								break;
+							case ActorNotFoundException actorNotFoundException: // Actor Not Found
+								statusCode = StatusCodes.Status404NotFound;
+								problemDetails = problemDetailsFactory.CreateProblemDetails(
+									context,
+									statusCode,
+									title: actorNotFoundException.Title,
+									detail: actorNotFoundException.Message,
 									instance: context.Request.Path
 								);
 								break;

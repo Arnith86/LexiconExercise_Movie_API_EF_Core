@@ -4,8 +4,8 @@ using AutoMapper;
 using MovieCore.DomainContracts;
 using MovieCore.Models.DTOs.MovieActorDto;
 using MovieCore.Models.Entities;
+using MovieCore.Models.Exceptions;
 using ServicesContracts.Contracts;
-using System.Net.Http;
 
 namespace MovieServices.Services;
 
@@ -29,38 +29,17 @@ public class ActorServices : IActorServices
 	{
 		var movie = await _unitOfWork.Movies.GetMovieAsync(movieId, changeTracker: true);
 
-		if (movie is null)
-		{
-			//return Problem(
-			//	statusCode: StatusCodes.Status400BadRequest,
-			//	title: "Invalid movie ID",
-			//	detail: $"No movie with ID {movieId} was found.",
-			//	instance: HttpContext.Request.Path
-			//);
-
-			// ToDo : Create a custom exception and handle this exception in program.cs 
-			throw new ArgumentNullException(nameof(movie), $"No movie with ID {movieId} was found.");
-		}
-
+		if (movie is null) 
+			throw new MovieNotFoundException(movieId);
+		
 		bool actorExists = await _unitOfWork.Actors.AnyAsync(movieActorCreateDto.ActorId);
 
-		if (!actorExists)
-		{
-			//return Problem(
-			//	statusCode: StatusCodes.Status400BadRequest,
-			//	title: "Invalid actor ID",
-			//	detail: $"No actor with ID {movieId} was found.",
-			//	instance: HttpContext.Request.Path
-			//);
-
-			// ToDo : Create a custom exception and handle this exception in program.cs 
-			throw new ArgumentNullException($"No actor with ID {movieId} was found.");
-		}
-
+		if (!actorExists) 
+			throw new ActorNotFoundException(movieActorCreateDto.ActorId);
+	
 		MovieActor movieActor = _mapper.Map<MovieActor>(movieActorCreateDto);
 
 		movie.MovieActors.Add(_mapper.Map<MovieActor>(movieActorCreateDto));
-
 
 		await _unitOfWork.CompleteAsync();
 

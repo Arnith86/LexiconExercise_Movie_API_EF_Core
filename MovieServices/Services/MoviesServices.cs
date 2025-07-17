@@ -6,9 +6,10 @@ using MovieCore.DomainContracts;
 using MovieCore.Models.DTOs.MovieDtos;
 using MovieCore.Models.Entities;
 using MovieCore.Models.Exceptions;
+using MovieServices;
 using Services.Contracts.Contracts;
 
-namespace Movie.Services.Services;
+namespace MovieServices.Services;
 
 /// <summary>
 /// Implements movie-related business logic and coordinates data access operations between the controller layer
@@ -19,11 +20,25 @@ public class MoviesServices : IMoviesServices
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
+	private const int _pageSizeDefault = 10;
+	private const int _pageSizeMax = 100;
+	private const int _pageNumberDefault = 1;
 
 	public MoviesServices(IUnitOfWork unitOfWork, IMapper mapper)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
+	}
+
+	private (int setPageSize, int setPage) SetPageVariables(
+		int pageSize = _pageSizeDefault,
+		int page = _pageNumberDefault)
+	{
+		pageSize = pageSize < 1 ? _pageSizeDefault : pageSize;
+		pageSize = pageSize > 100 ? _pageSizeMax : pageSize;
+		page = page < 1 ? _pageNumberDefault : page;
+
+		return (pageSize, page);
 	}
 
 	/// <inheritdoc/>

@@ -77,8 +77,8 @@ public class MoviesController : ControllerBase
 		{
 			return Problem(
 				statusCode: StatusCodes.Status404NotFound,
-				title: "Invalid movie genre ID",
-				detail: $"No movie genre with ID {id} was found.",
+				title: "Invalid movie ID",
+				detail: $"No movie with ID {id} was found.",
 				instance: HttpContext.Request.Path
 			);
 		}
@@ -115,8 +115,8 @@ public class MoviesController : ControllerBase
 		{
 			return Problem(
 				statusCode: StatusCodes.Status404NotFound,
-				title: "Invalid movie genre ID",
-				detail: $"No movie genre with ID {id} was found.",
+				title: "Invalid movie ID",
+				detail: $"No movie with ID {id} was found.",
 				instance: HttpContext.Request.Path
 			);
 		}

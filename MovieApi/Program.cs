@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using MovieApi.ExtensionsDependencyInjection;
+using MovieApi.Extensions.ExtensionsDependencyInjection;
+using MovieApi.Extensions.ExtensionsUseExceptionHandler;
 using MovieCore.DomainContracts;
 using MovieCore.Models.Exceptions;
 using MovieData.Data;
@@ -57,68 +58,8 @@ namespace MovieApi
 
 			var app = builder.Build();
 
-			// Todo: Extract to extension method.
-			app.UseExceptionHandler(builder =>
-			{
-				builder.Run(async context =>
-				{
-					var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-
-					if (contextFeature != null)
-					{
-						var problemDetailsFactory = app.Services.GetRequiredService<ProblemDetailsFactory>();
-
-						ProblemDetails problemDetails;
-						int statusCode;
-
-						switch (contextFeature.Error)
-						{
-							case MovieNotFoundException movieNotFoundException: // Movie Not Found
-								statusCode = StatusCodes.Status404NotFound;
-								problemDetails = problemDetailsFactory.CreateProblemDetails(
-									context,
-									statusCode,
-									title: movieNotFoundException.Title,
-									detail: movieNotFoundException.Message,
-									instance: context.Request.Path
-								);
-								break;
-							case MovieGenreNotFoundException movieGenreNotFoundException: // Movie Genre Not Found
-								statusCode = StatusCodes.Status404NotFound;
-								problemDetails = problemDetailsFactory.CreateProblemDetails(
-									context,
-									statusCode,
-									title: movieGenreNotFoundException.Title,
-									detail: movieGenreNotFoundException.Message,
-									instance: context.Request.Path
-								);
-								break;
-							case ActorNotFoundException actorNotFoundException: // Actor Not Found
-								statusCode = StatusCodes.Status404NotFound;
-								problemDetails = problemDetailsFactory.CreateProblemDetails(
-									context,
-									statusCode,
-									title: actorNotFoundException.Title,
-									detail: actorNotFoundException.Message,
-									instance: context.Request.Path
-								);
-								break;
-							default:
-								statusCode = StatusCodes.Status500InternalServerError;  // General server error
-								problemDetails = problemDetailsFactory.CreateProblemDetails(
-										context,
-										statusCode,
-										title: "Internal Server Error",
-										detail: contextFeature.Error.Message,
-										instance: context.Request.Path);
-								break;
-						}
-
-						context.Response.StatusCode = statusCode;
-						await context.Response.WriteAsJsonAsync(problemDetails);
-					}
-				});
-			});
+			app.ConfigureExceptionHandler();
+			
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())

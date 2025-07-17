@@ -4,7 +4,7 @@ using Services.Contracts;
 using Services.Contracts.Contracts;
 using ServicesContracts.Contracts;
 
-namespace MovieApi.ExtensionsDependencyInjection;
+namespace MovieApi.Extensions.ExtensionsDependencyInjection;
 
 /// <summary>
 /// Provides extension methods for registering the service layer dependencies used in the VideoMovie API.

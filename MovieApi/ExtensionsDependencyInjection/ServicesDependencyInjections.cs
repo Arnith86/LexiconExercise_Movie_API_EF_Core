@@ -1,5 +1,4 @@
-﻿using Movie.Services;
-using Movie.Services.Services;
+﻿using MovieServices;
 using MovieServices.Services;
 using Services.Contracts;
 using Services.Contracts.Contracts;

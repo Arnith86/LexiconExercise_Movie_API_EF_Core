@@ -2,7 +2,7 @@
 using Services.Contracts.Contracts;
 using ServicesContracts.Contracts;
 
-namespace Movie.Services;
+namespace MovieServices;
 
 /// <summary>
 /// Aggregates and lazily initializes access to application service layer components (acts as a facade for services), 

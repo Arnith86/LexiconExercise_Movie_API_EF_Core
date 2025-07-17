@@ -6,8 +6,8 @@ using MovieApi.ExtensionsDependencyInjection;
 using MovieCore.DomainContracts;
 using MovieCore.Models.Exceptions;
 using MovieData.Data;
-using MovieData.Extensions;
 using MovieData.Data.Configurations;
+using MovieData.Extensions;
 using MovieData.Repositories;
 using MoviePresentation;
 
@@ -54,7 +54,6 @@ namespace MovieApi
 
 			// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 			//builder.Services.AddOpenApi();
-
 
 			var app = builder.Build();
 

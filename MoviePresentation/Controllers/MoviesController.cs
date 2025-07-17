@@ -23,14 +23,15 @@ public class MoviesController : ControllerBase
 
 	// GET: api/Movies?pageSize=20&page=3
 	/// <summary>
-	/// Retrieves all registered movies with basic details and their associated genre.
+	/// Retrieves a paginated list of registered movies with basic details and their associated genre.
 	/// </summary>
 	/// <remarks>
 	/// This endpoint returns a simplified list of movies. Each movie includes:
-	/// Id, Title, Genre (as a string), Duration, Release Year
-	/// </remarks>
-	/// <returns>A list of movies with basic information and genre.</returns>
-	/// <response code="200">Returns the list of movies successfully.</response>
+	/// Id, Title, Genre (as a string), Duration, Release Year.
+	/// <param name="pageSize">The number of movies to return per page.</param>
+	/// <param name="page">The page number to retrieve.</param>
+	/// <returns>A paginated list of movies with basic information and genre.</returns>
+	/// <response code="200">Returns the paginated list of movies successfully.</response>
 	[HttpGet]
 	[SwaggerOperation(
 		Summary = "Retrieve all movies",
@@ -44,6 +45,7 @@ public class MoviesController : ControllerBase
 			await _serviceManager.MovieServices.GetAllMoviesAsync(pageSize, page);
 
 		Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetaData));
+		
 		return Ok(movieDtos);
 	} 
 

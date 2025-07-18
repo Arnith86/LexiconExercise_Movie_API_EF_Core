@@ -1,4 +1,5 @@
-﻿using MovieCore.Models.Entities;
+﻿using MovieCore.Models.DTOs.ActorDTOs;
+using MovieCore.Models.Entities;
 
 namespace MovieCore.DomainContracts;
 
@@ -9,4 +10,6 @@ namespace MovieCore.DomainContracts;
 public interface IActorRepository : IRepositoryQueries<Actor>
 {
 	Task<bool> AnyAsync(int id);
+	Task<Actor?> GetActorAsync(int id, bool changeTracker = false);
+	Task<IEnumerable<Actor>> GetAllActorsAsync(int pageSize, int page, bool changeTracker = false);
 }

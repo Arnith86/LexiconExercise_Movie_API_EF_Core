@@ -2,13 +2,15 @@
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieActorDto;
 using Services.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json;
 
 namespace MovieApi.Controllers
 {
-	[Route("api/movie/{movieId}/actors")]
+	[Route("api/actors")]
 	[ApiController]
 	public class ActorsController : ControllerBase
 	{
@@ -19,6 +21,39 @@ namespace MovieApi.Controllers
 			_serviceManager = serviceManager;
 		}
 
+		// GET /api/actors?pageSize=20&page=3
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<ActorDto>>> GetActors(
+			[FromQuery]int pageSize,
+			[FromQuery]int page)
+		{
+			var (actorDtos, paginationMetaData) =
+				await _serviceManager.ActorServices.GetAllActorsAsync(pageSize, page);
+
+			Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetaData));
+
+			return Ok(actorDtos);
+		}
+
+		// GET /api/actors/5
+		/// <summary>Retrieves data associated with a single actor linked by id. Data includes Id, Name and BirthYear.</summary>
+		/// <param name="id">Id of the actor to retrieve data for.</param>
+		/// <returns>
+		/// A <see cref="ActorDto"/> containing information about the specified actor, or a 
+		/// <see cref="ProblemDetails"/> object if the actor is not found.
+		/// </returns>
+		/// <response code="200">Returned the actor data requested.</response>
+		/// <response code="400">Invalid actor Id was provided.</response>
+		[HttpGet("{id}")]
+		[ProducesResponseType(typeof(ActorDto), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+		[SwaggerOperation(
+			Summary = "Gets data related to a single actor.",
+			Description = "Retrieves data linked to an actor. Includes actor name, birth year and id"
+		)]
+		public async Task<ActionResult<ActorDto>> GetActor(int id) =>	
+			Ok(await _serviceManager.ActorServices.GetActorAsync(id));
+		
 
 		// POST /api/movies/5/actors
 		/// <summary>
@@ -36,7 +71,7 @@ namespace MovieApi.Controllers
 		)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-		[HttpPost]
+		[HttpPost("/api/movie/{movieId}/actors")]
 		public async Task<IActionResult> PostLinkMovieAndActor(
 			[FromBody] MovieActorCreateDto movieActorCreateDto,
 			[FromRoute] int movieId)

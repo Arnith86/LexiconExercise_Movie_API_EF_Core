@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieActorDto;
 using MovieCore.Models.DTOs.MovieDtos;
 using MovieCore.Models.Entities;
@@ -9,6 +10,8 @@ public class MapperProfile : Profile
 {
 	public MapperProfile()
 	{
+		// ToDo: separate profiles into controller specific files 
+		// Movie Profiles
 		CreateMap<VideoMovie, MovieWithGenreDto>()
 			.ForMember(dest => dest.MovieGenre, opt => opt.MapFrom(src => src.MoviesGenre!.Genre));
 
@@ -26,5 +29,8 @@ public class MapperProfile : Profile
 
 		CreateMap<MovieActorCreateDto, MovieActor>();
 
+
+		// Actor profiles
+		CreateMap<Actor, ActorDto>();
 	}
 }

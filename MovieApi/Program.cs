@@ -1,11 +1,7 @@
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using MovieApi.Extensions.ExtensionsDependencyInjection;
 using MovieApi.Extensions.ExtensionsUseExceptionHandler;
 using MovieCore.DomainContracts;
-using MovieCore.Models.Exceptions;
 using MovieData.Data;
 using MovieData.Data.Configurations;
 using MovieData.Extensions;
@@ -59,7 +55,7 @@ namespace MovieApi
 			var app = builder.Build();
 
 			app.ConfigureExceptionHandler();
-			
+
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())

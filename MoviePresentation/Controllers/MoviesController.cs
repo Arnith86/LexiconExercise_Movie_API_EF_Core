@@ -114,8 +114,8 @@ public class MoviesController : ControllerBase
 		Summary = "Get full movie details",
 		Description = "Retrieves a movie by ID, including its genre, synopsis, budget, language, reviews, and actors."
 	)]
-	public async Task<ActionResult<MovieDetailDto>> GetMovieFullDetails(int id)
-		=> Ok(await _serviceManager.MovieServices.GetMovieFullDetailsAsync(id));
+	public async Task<ActionResult<MovieDetailDto>> GetMovieFullDetails(int id) => 
+		Ok(await _serviceManager.MovieServices.GetMovieFullDetailsAsync(id));
 
 
 

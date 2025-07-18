@@ -15,9 +15,14 @@ public interface IMoviesServices
 	Task<int> CountAsync();
 
 	/// <summary>
-	/// Retrieves a collection of all movies with their associated genre information.
+	/// Retrieves a paginated collection of movies with associated genre information.
 	/// </summary>
-	/// <returns>A collection of <see cref="MovieWithGenreDto"/>.</returns>
+	/// <param name="pageSize">The number of movies to include per page.</param>
+	/// <param name="page">The page number to retrieve.</param>
+	/// <returns>
+	/// A tuple containing a collection of <see cref="MovieWithGenreDto"/> and 
+	/// pagination metadata implementing <see cref="IPaginationMetaData"/>.
+	/// </returns>
 	Task<(IEnumerable<MovieWithGenreDto>, IPaginationMetaData)> GetAllMoviesAsync(int pageSize, int page);
 
 	/// <summary>

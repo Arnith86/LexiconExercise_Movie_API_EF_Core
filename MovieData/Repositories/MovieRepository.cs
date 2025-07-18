@@ -29,9 +29,6 @@ public class MovieRepository : RepositoryBase<VideoMovie>, IMovieRepository
 		.Include(m => m.MoviesGenre)
 		.ToListAsync();
 
-	//public async Task<List<VideoMovie>> GetAllMoviesAsync(bool changeTracker = false) => 
-	//	await GetAll(changeTracker).Include(m => m.MoviesGenre).ToListAsync();
-
 	public async Task<VideoMovie?> GetMovieAsync(int id, bool changeTracker = false) =>
 		await GetByCondition(m => m.Id.Equals(id), changeTracker)
 				.Include(m => m.MoviesGenre)

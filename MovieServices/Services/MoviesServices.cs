@@ -16,29 +16,15 @@ namespace MovieServices.Services;
 /// and the underlying repositories. Handles mapping between entity models and DTOs using AutoMapper,
 /// and ensures validation and existence checks for movie and genre operations.
 /// </summary>
-public class MoviesServices : IMoviesServices
+public class MoviesServices : EntityServicesBase, IMoviesServices
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
-	private const int _pageSizeDefault = 10;
-	private const int _pageSizeMax = 100;
-	private const int _pageNumberDefault = 1;
 
 	public MoviesServices(IUnitOfWork unitOfWork, IMapper mapper)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
-	}
-
-	private (int setPageSize, int setPage) SetPageVariables(
-		int pageSize = _pageSizeDefault,
-		int page = _pageNumberDefault)
-	{
-		pageSize = pageSize < 1 ? _pageSizeDefault : pageSize;
-		pageSize = pageSize > 100 ? _pageSizeMax : pageSize;
-		page = page < 1 ? _pageNumberDefault : page;
-
-		return (pageSize, page);
 	}
 
 	/// <inheritdoc/>
@@ -50,7 +36,7 @@ public class MoviesServices : IMoviesServices
 		var (setPageSize, setPage) = SetPageVariables(pageSize, page);
 		int totalItemCount = await CountAsync();
 
-		var paginationMetaData = new PaginationMetaData(totalItemCount, setPage, setPageSize);
+		var paginationMetaData = new PaginationMetaData(totalItemCount, currentPage: setPage, setPageSize);
 		var pagedMovieWithGenreDto = await _unitOfWork.Movies.GetAllMoviesAsync(setPageSize, setPage);
 
 		return (_mapper.Map<IEnumerable<MovieWithGenreDto>>(pagedMovieWithGenreDto), paginationMetaData);

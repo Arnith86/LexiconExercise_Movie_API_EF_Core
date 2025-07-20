@@ -1,4 +1,5 @@
 ﻿using MovieCore.DomainContracts;
+using MovieCore.DomainContracts.RepositoryInterfaces;
 using MovieData.Data;
 
 namespace MovieData.Repositories

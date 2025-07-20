@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieCore.DomainContracts;
+using MovieCore.DomainContracts.RepositoryInterfaces;
+using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.Entities;
 using MovieData.Data;
+using MovieData.Extensions;
+
 
 namespace MovieData.Repositories;
 
@@ -20,11 +23,11 @@ public class ActorRepository : RepositoryBase<Actor>, IActorRepository
 	public async Task<Actor?> GetActorAsync(int id, bool changeTracker = false)
 		=> await GetByCondition(a => a.Id.Equals(id), changeTracker).FirstOrDefaultAsync();
 
-	public async Task<IEnumerable<Actor>> GetAllActorsAsync(int pageSize, int page, bool changeTracker = false)
+	public async Task<IPageList<Actor>> GetAllActorsAsync(
+		MovieRequestParameters requestParameters, 
+		bool changeTracker = false)
 	{
-		return await GetAll(changeTracker).OrderBy(a => a.Id)
-			.Skip(pageSize * (page - 1))
-			.Take(pageSize)
-			.ToListAsync();
+		return await GetAll(changeTracker)
+			.ToPageListAsync(requestParameters.PageNumber, requestParameters.PageSize);
 	}
 }

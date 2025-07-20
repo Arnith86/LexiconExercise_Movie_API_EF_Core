@@ -1,5 +1,5 @@
 ﻿using MovieCore.Models.DTOs.MovieDtos;
-using MovieServices;
+//using MovieServices;
 
 namespace Services.Contracts.Contracts;
 
@@ -14,16 +14,16 @@ public interface IMoviesServices
 	/// <returns>An integer with the number of movies found.</returns>
 	Task<int> CountAsync();
 
-	/// <summary>
-	/// Retrieves a paginated collection of movies with associated genre information.
-	/// </summary>
-	/// <param name="pageSize">The number of movies to include per page.</param>
-	/// <param name="page">The page number to retrieve.</param>
-	/// <returns>
-	/// A tuple containing a collection of <see cref="MovieWithGenreDto"/> and 
-	/// pagination metadata implementing <see cref="IPaginationMetaData"/>.
-	/// </returns>
-	Task<(IEnumerable<MovieWithGenreDto>, IPaginationMetaData)> GetAllMoviesAsync(int pageSize, int page);
+	///// <summary>
+	///// Retrieves a paginated collection of movies with associated genre information.
+	///// </summary>
+	///// <param name="pageSize">The number of movies to include per page.</param>
+	///// <param name="page">The page number to retrieve.</param>
+	///// <returns>
+	///// A tuple containing a collection of <see cref="MovieWithGenreDto"/> and 
+	///// pagination metadata implementing <see cref="IPaginationMetaData"/>.
+	///// </returns>
+	//Task<(IEnumerable<MovieWithGenreDto>, IPaginationMetaData)> GetAllMoviesAsync(int pageSize, int page);
 
 	/// <summary>
 	/// Retrieves a single movie by its ID, including its genre information.

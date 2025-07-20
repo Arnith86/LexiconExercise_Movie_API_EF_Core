@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieCore.DomainContracts;
+using MovieCore.DomainContracts.RepositoryInterfaces;
 using MovieCore.Models.Entities;
 using MovieData.Data;
 using System.Linq.Expressions;

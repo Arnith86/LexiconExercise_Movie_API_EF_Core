@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieCore.DomainContracts;
+using MovieCore.DomainContracts.RepositoryInterfaces;
 using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieDtos;
 using MovieCore.Models.DTOs.ReviewDTOs;

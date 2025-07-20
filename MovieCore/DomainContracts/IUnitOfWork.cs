@@ -1,4 +1,6 @@
-﻿namespace MovieCore.DomainContracts;
+﻿using MovieCore.DomainContracts.RepositoryInterfaces;
+
+namespace MovieCore.DomainContracts;
 
 /// <summary>
 /// Defines a unit of work that encapsulates access to multiple repositories

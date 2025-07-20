@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieActorDto;
 using Services.Contracts;
@@ -22,17 +23,25 @@ namespace MovieApi.Controllers
 		}
 
 		// GET /api/actors?pageSize=20&page=3
+		/// <summary>
+		/// Retrieves paginated collection of actors.
+		/// </summary>
+		/// <param name="requestParameters">Contain the parameters for the pagination and possible other parameters.</param>
+		/// <returns>An IEnumerable of <see cref="ActorDto"/> and <see cref="IPaginationMetaData"/>.</returns>
 		[HttpGet]
+		[ProducesResponseType(typeof(ActorDto), StatusCodes.Status200OK)]
+		[SwaggerOperation(
+			Summary = "Returns a single page of actors.",
+			Description = "Returns a single page of actors, with page size and number being assigned in the request."
+		)]
 		public async Task<ActionResult<IEnumerable<ActorDto>>> GetActors(
-			[FromQuery]int pageSize,
-			[FromQuery]int page)
+			[FromQuery] MovieRequestParameters requestParameters)
 		{
-			var (actorDtos, paginationMetaData) =
-				await _serviceManager.ActorServices.GetAllActorsAsync(pageSize, page);
+			var pagedResult = await _serviceManager.ActorServices.GetAllActorsAsync(requestParameters);
 
-			Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetaData));
+			Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
 
-			return Ok(actorDtos);
+			return Ok(pagedResult.actorDtos);
 		}
 
 		// GET /api/actors/5
@@ -51,9 +60,9 @@ namespace MovieApi.Controllers
 			Summary = "Gets data related to a single actor.",
 			Description = "Retrieves data linked to an actor. Includes actor name, birth year and id"
 		)]
-		public async Task<ActionResult<ActorDto>> GetActor(int id) =>	
+		public async Task<ActionResult<ActorDto>> GetActor(int id) =>
 			Ok(await _serviceManager.ActorServices.GetActorAsync(id));
-		
+
 
 		// POST /api/movies/5/actors
 		/// <summary>

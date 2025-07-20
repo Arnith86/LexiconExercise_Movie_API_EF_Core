@@ -2,6 +2,7 @@
 
 using AutoMapper;
 using MovieCore.DomainContracts;
+using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieActorDto;
 using MovieCore.Models.Entities;
@@ -14,7 +15,7 @@ namespace MovieServices.Services;
 /// Provides functionality for managing associations between movies and actors,
 /// such as linking an actor to a specific movie. Implements the <see cref="IActorServices"/> interface.
 /// </summary>
-public class ActorServices : EntityServicesBase, IActorServices
+public class ActorServices : IActorServices
 {
 	private readonly IMapper _mapper;
 	private readonly IUnitOfWork _unitOfWork;
@@ -36,17 +37,15 @@ public class ActorServices : EntityServicesBase, IActorServices
 	}
 
 	/// <inheritdoc/>
-	public async Task<(IEnumerable<ActorDto>, IPaginationMetaData)> GetAllActorsAsync(int pageSize, int page)
+	public async Task<(IEnumerable<ActorDto> actorDtos, IPaginationMetaData metaData)> GetAllActorsAsync(
+		MovieRequestParameters requestParameters,
+		bool trackChanges = false)
 	{
-		var (setPageSize, setPage) = SetPageVariables(pageSize, page);
-		int totalPageNumber = await _unitOfWork.Actors.CountAsync();
+		var actorsDtosWithMetaDate = await _unitOfWork.Actors.GetAllActorsAsync(requestParameters, trackChanges);
+		var actorDtos = _mapper.Map<IEnumerable<ActorDto>>(actorsDtosWithMetaDate.Items);
 
-		IPaginationMetaData paginationMetaData = 
-			new PaginationMetaData(totalPageNumber, currentPage: setPage, setPageSize);
-		var pagedActorDtos = await _unitOfWork.Actors.GetAllActorsAsync(setPageSize, setPage);
-
-		return (_mapper.Map<IEnumerable<ActorDto>>(pagedActorDtos), paginationMetaData);
-	} 
+		return (actorDtos, actorsDtosWithMetaDate.MetaData);
+	}
 
 	/// <inheritdoc/>
 	public async Task<bool> LinkMovieAndActorAsync(MovieActorCreateDto movieActorCreateDto, int movieId)

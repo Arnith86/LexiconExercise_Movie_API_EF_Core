@@ -1,7 +1,7 @@
 ﻿using MovieCore.Models.Entities;
 using System.Linq.Expressions;
 
-namespace MovieCore.DomainContracts;
+namespace MovieCore.DomainContracts.RepositoryInterfaces;
 
 /// <summary>
 /// Defines query operations for retrieving entities from the database.

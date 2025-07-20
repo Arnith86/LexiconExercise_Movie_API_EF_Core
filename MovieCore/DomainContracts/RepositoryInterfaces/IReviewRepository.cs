@@ -1,7 +1,7 @@
 ﻿using MovieCore.Models.DTOs.ReviewDTOs;
 using MovieCore.Models.Entities;
 
-namespace MovieCore.DomainContracts;
+namespace MovieCore.DomainContracts.RepositoryInterfaces;
 
 /// <summary>
 /// Defines data access operations specific to <see cref="Review"/> entities.

@@ -1,6 +1,8 @@
-﻿using MovieCore.Models.DTOs.ActorDTOs;
+﻿using MovieCore.DomainContracts.RequestParameters;
+using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieActorDto;
-using MovieServices;
+
+
 
 namespace ServicesContracts.Contracts;
 
@@ -17,15 +19,17 @@ public interface IActorServices
 	Task<ActorDto> GetActorAsync(int id);
 
 	/// <summary>
-	/// Retrieves a paginated collection of actors.
+	/// Retrieves a paginated collection of actors with optional change tracking.
 	/// </summary>
-	/// <param name="pageSize">The number of items to include per page.</param>
-	/// <param name="page">The page number to retrieve.</param>
+	/// <param name="requestParameters">Parameters specifying pagination settings, such as page number and page size.</param>
+	/// <param name="trackChanges">Indicates whether to track changes in the underlying entities (default is <c>false</c>).</param>
 	/// <returns>
 	/// A tuple containing a collection of <see cref="ActorDto"/> and 
 	/// pagination metadata implementing <see cref="IPaginationMetaData"/>.
 	/// </returns>
-	Task<(IEnumerable<ActorDto>, IPaginationMetaData)> GetAllActorsAsync(int pageSize, int page);
+	Task<(IEnumerable<ActorDto> actorDtos, IPaginationMetaData metaData)> GetAllActorsAsync(
+		MovieRequestParameters requestParameters,
+		bool trackChanges = false);
 
 	/// <summary>
 	/// Links an actor to a movie by creating an association between them.

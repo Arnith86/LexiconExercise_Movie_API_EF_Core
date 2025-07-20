@@ -3,10 +3,10 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MovieCore.DomainContracts;
+using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.MovieDtos;
 using MovieCore.Models.Entities;
 using MovieCore.Models.Exceptions;
-using MovieServices;
 using Services.Contracts.Contracts;
 
 namespace MovieServices.Services;
@@ -16,7 +16,7 @@ namespace MovieServices.Services;
 /// and the underlying repositories. Handles mapping between entity models and DTOs using AutoMapper,
 /// and ensures validation and existence checks for movie and genre operations.
 /// </summary>
-public class MoviesServices : EntityServicesBase, IMoviesServices
+public class MoviesServices : IMoviesServices
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
@@ -30,17 +30,18 @@ public class MoviesServices : EntityServicesBase, IMoviesServices
 	/// <inheritdoc/>
 	public async Task<int> CountAsync() => await _unitOfWork.Movies.CountAsync();
 
-	/// <inheritdoc/>
-	public async Task<(IEnumerable<MovieWithGenreDto>, IPaginationMetaData)> GetAllMoviesAsync(int pageSize, int page)
-	{
-		var (setPageSize, setPage) = SetPageVariables(pageSize, page);
-		int totalItemCount = await CountAsync();
+	///// <inheritdoc/>
+	//public async Task<(IEnumerable<MovieWithGenreDto>, IPaginationMetaData)> GetAllMoviesAsync(
+	//	MovieRequestParameters requestParameters/*int pageSize, int page*/)
+	//{
+	//	var (setPageSize, setPage) = SetPageVariables(pageSize, page);
+	//	int totalItemCount = await CountAsync();
 
-		var paginationMetaData = new PaginationMetaData(totalItemCount, currentPage: setPage, setPageSize);
-		var pagedMovieWithGenreDto = await _unitOfWork.Movies.GetAllMoviesAsync(setPageSize, setPage);
+	//	//var paginationMetaData = new PaginationMetaData( totalItemCount, currentPage: setPage, setPageSize);
+	//	var pagedMovieWithGenreDto = await _unitOfWork.Movies.GetAllMoviesAsync(setPageSize, setPage);
 
-		return (_mapper.Map<IEnumerable<MovieWithGenreDto>>(pagedMovieWithGenreDto), paginationMetaData);
-	}
+	//	return (_mapper.Map<IEnumerable<MovieWithGenreDto>>(pagedMovieWithGenreDto), paginationMetaData);
+	//}
 
 
 	/// <inheritdoc/>

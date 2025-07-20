@@ -21,33 +21,33 @@ public class MoviesController : ControllerBase
 	}
 
 
-	// GET: api/Movies?pageSize=20&page=3
-	/// <summary>
-	/// Retrieves a paginated list of registered movies with basic details and their associated genre.
-	/// </summary>
-	/// <remarks>
-	/// This endpoint returns a simplified list of movies. Each movie includes:
-	/// Id, Title, Genre (as a string), Duration, Release Year.
-	/// <param name="pageSize">The number of movies to return per page.</param>
-	/// <param name="page">The page number to retrieve.</param>
-	/// <returns>A paginated list of movies with basic information and genre.</returns>
-	/// <response code="200">Returns the paginated list of movies successfully.</response>
-	[HttpGet]
-	[SwaggerOperation(
-		Summary = "Retrieve all movies",
-		Description = "Returns a simplified list of all registered movies including basic details and genre.")]
-	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieWithGenreDto>))]
-	public async Task<ActionResult<IEnumerable<MovieWithGenreDto>>> GetMovies( 
-		[FromQuery] int pageSize, 
-		[FromQuery] int page)
-	{
-		var (movieDtos, paginationMetaData) = 
-			await _serviceManager.MovieServices.GetAllMoviesAsync(pageSize, page);
+	//// GET: api/Movies?pageSize=20&page=3
+	///// <summary>
+	///// Retrieves a paginated list of registered movies with basic details and their associated genre.
+	///// </summary>
+	///// <remarks>
+	///// This endpoint returns a simplified list of movies. Each movie includes:
+	///// Id, Title, Genre (as a string), Duration, Release Year.
+	///// <param name="pageSize">The number of movies to return per page.</param>
+	///// <param name="page">The page number to retrieve.</param>
+	///// <returns>A paginated list of movies with basic information and genre.</returns>
+	///// <response code="200">Returns the paginated list of movies successfully.</response>
+	//[HttpGet]
+	//[SwaggerOperation(
+	//	Summary = "Retrieve all movies",
+	//	Description = "Returns a simplified list of all registered movies including basic details and genre.")]
+	//[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieWithGenreDto>))]
+	//public async Task<ActionResult<IEnumerable<MovieWithGenreDto>>> GetMovies( 
+	//	[FromQuery] int pageSize, 
+	//	[FromQuery] int page)
+	//{
+	//	var (movieDtos, paginationMetaData) = 
+	//		await _serviceManager.MovieServices.GetAllMoviesAsync(pageSize, page);
 
-		Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetaData));
+	//	Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetaData));
 		
-		return Ok(movieDtos);
-	} 
+	//	return Ok(movieDtos);
+	//} 
 
 
 	// GET: api/Movies/5

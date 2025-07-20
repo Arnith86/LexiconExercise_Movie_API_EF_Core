@@ -1,6 +1,6 @@
 ﻿using MovieCore.Models.Entities;
 
-namespace MovieCore.DomainContracts;
+namespace MovieCore.DomainContracts.RepositoryInterfaces;
 
 /// <summary>
 /// Defines basic repository actions for handling entities in a data store.

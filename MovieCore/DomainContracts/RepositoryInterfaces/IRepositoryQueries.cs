@@ -11,14 +11,6 @@ public interface IRepositoryQueries<T> where T : EntityBase
 {
 
 	/// <summary>
-	/// Asynchronously counts the number of entities found.
-	/// </summary>
-	/// <returns>
-	/// A task representing the asynchronous operation, containing the number of matching entities.
-	/// </returns>
-	Task<int> CountAsync();
-
-	/// <summary>
 	/// Asynchronously determines whether any entities match the given condition.
 	/// </summary>
 	/// <param name="expression">A LINQ expression used to test against the entities.</param>

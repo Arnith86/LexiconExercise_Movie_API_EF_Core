@@ -38,7 +38,7 @@ public class ActorServices : IActorServices
 
 	/// <inheritdoc/>
 	public async Task<(IEnumerable<ActorDto> actorDtos, IPaginationMetaData metaData)> GetAllActorsAsync(
-		MovieRequestParameters requestParameters,
+		ActorRequestParameters requestParameters,
 		bool trackChanges = false)
 	{
 		var actorsDtosWithMetaDate = await _unitOfWork.Actors.GetAllActorsAsync(requestParameters, trackChanges);

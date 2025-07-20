@@ -19,16 +19,16 @@ public interface IActorServices
 	Task<ActorDto> GetActorAsync(int id);
 
 	/// <summary>
-	/// Retrieves a paginated collection of actors with optional change tracking.
+	/// Retrieves a paginated collection of actors with or without associated movies and with optional change tracking.
 	/// </summary>
-	/// <param name="requestParameters">Parameters specifying pagination settings, such as page number and page size.</param>
+	/// <param name="requestParameters">Parameters specifying pagination settings, such as page number and page size and movie retrieval.</param>
 	/// <param name="trackChanges">Indicates whether to track changes in the underlying entities (default is <c>false</c>).</param>
 	/// <returns>
 	/// A tuple containing a collection of <see cref="ActorDto"/> and 
 	/// pagination metadata implementing <see cref="IPaginationMetaData"/>.
 	/// </returns>
 	Task<(IEnumerable<ActorDto> actorDtos, IPaginationMetaData metaData)> GetAllActorsAsync(
-		MovieRequestParameters requestParameters,
+		ActorRequestParameters requestParameters,
 		bool trackChanges = false);
 
 	/// <summary>

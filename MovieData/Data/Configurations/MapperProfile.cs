@@ -12,6 +12,7 @@ public class MapperProfile : Profile
 	{
 		// ToDo: separate profiles into controller specific files 
 		// Movie Profiles
+		CreateMap<VideoMovie, MovieBaseDto>();
 		CreateMap<VideoMovie, MovieWithGenreDto>()
 			.ForMember(dest => dest.MovieGenre, opt => opt.MapFrom(src => src.MoviesGenre!.Genre));
 
@@ -31,6 +32,10 @@ public class MapperProfile : Profile
 
 
 		// Actor profiles
-		CreateMap<Actor, ActorDto>();
+		CreateMap<Actor, ActorDto>()
+			.ForMember(dest => dest.VideoMovies, opt => opt.MapFrom(src => 
+				src.MovieActors!.Select(ma => ma.Movie).ToList()));
+
+
 	}
 }

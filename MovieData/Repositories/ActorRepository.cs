@@ -24,10 +24,19 @@ public class ActorRepository : RepositoryBase<Actor>, IActorRepository
 		=> await GetByCondition(a => a.Id.Equals(id), changeTracker).FirstOrDefaultAsync();
 
 	public async Task<IPageList<Actor>> GetAllActorsAsync(
-		MovieRequestParameters requestParameters, 
+		ActorRequestParameters requestParameters, 
 		bool changeTracker = false)
 	{
+
+		if (!requestParameters.WithMovies)
+		{ 
+			return await GetAll(changeTracker)
+				.ToPageListAsync(requestParameters.PageNumber, requestParameters.PageSize);
+		}	
+
 		return await GetAll(changeTracker)
+			.Include(a => a.MovieActors)
+			.ThenInclude(m => m.Movie)
 			.ToPageListAsync(requestParameters.PageNumber, requestParameters.PageSize);
 	}
 }

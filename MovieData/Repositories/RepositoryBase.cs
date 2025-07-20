@@ -24,9 +24,6 @@ public class RepositoryBase<T> : IRepositoryActions<T>, IRepositoryQueries<T> wh
 		DbSet = context.Set<T>();
 	}
 
-	/// <inheritdoc>/>
-	public Task<int> CountAsync() => DbSet.CountAsync();
-
 	/// <inheritdoc/>
 	public async Task<bool> FindAnyAsync(Expression<Func<T, bool>> expression)
 		=> await DbSet.AnyAsync(expression);

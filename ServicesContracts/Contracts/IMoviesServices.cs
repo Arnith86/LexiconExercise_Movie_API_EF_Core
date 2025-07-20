@@ -8,11 +8,6 @@ namespace Services.Contracts.Contracts;
 /// </summary>
 public interface IMoviesServices
 {
-	/// <summary>
-	/// Counts the movie instances. 
-	/// </summary>
-	/// <returns>An integer with the number of movies found.</returns>
-	Task<int> CountAsync();
 
 	///// <summary>
 	///// Retrieves a paginated collection of movies with associated genre information.

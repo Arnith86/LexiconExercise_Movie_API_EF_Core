@@ -22,20 +22,21 @@ namespace MovieApi.Controllers
 			_serviceManager = serviceManager;
 		}
 
-		// GET /api/actors?pageSize=20&page=3
+		// GET /api/actors?withmovies=true&pageSize=20&page=3
 		/// <summary>
-		/// Retrieves paginated collection of actors.
+		/// Retrieves paginated collection of actors, either with or without associated movies.
 		/// </summary>
-		/// <param name="requestParameters">Contain the parameters for the pagination and possible other parameters.</param>
+		/// <param name="requestParameters">Contain the parameters for the pagination and if associated movie data is to be retrieved.</param>
 		/// <returns>An IEnumerable of <see cref="ActorDto"/> and <see cref="IPaginationMetaData"/>.</returns>
 		[HttpGet]
 		[ProducesResponseType(typeof(ActorDto), StatusCodes.Status200OK)]
 		[SwaggerOperation(
 			Summary = "Returns a single page of actors.",
-			Description = "Returns a single page of actors, with page size and number being assigned in the request."
+			Description =	"Returns a single page of actors, with page size, number, and " +
+							"option of adding movies being assigned in the request."
 		)]
 		public async Task<ActionResult<IEnumerable<ActorDto>>> GetActors(
-			[FromQuery] MovieRequestParameters requestParameters)
+			[FromQuery] ActorRequestParameters requestParameters)
 		{
 			var pagedResult = await _serviceManager.ActorServices.GetAllActorsAsync(requestParameters);
 

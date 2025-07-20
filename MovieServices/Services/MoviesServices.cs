@@ -3,7 +3,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MovieCore.DomainContracts;
-using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.MovieDtos;
 using MovieCore.Models.Entities;
 using MovieCore.Models.Exceptions;
@@ -26,23 +25,6 @@ public class MoviesServices : IMoviesServices
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 	}
-
-	/// <inheritdoc/>
-	public async Task<int> CountAsync() => await _unitOfWork.Movies.CountAsync();
-
-	///// <inheritdoc/>
-	//public async Task<(IEnumerable<MovieWithGenreDto>, IPaginationMetaData)> GetAllMoviesAsync(
-	//	MovieRequestParameters requestParameters/*int pageSize, int page*/)
-	//{
-	//	var (setPageSize, setPage) = SetPageVariables(pageSize, page);
-	//	int totalItemCount = await CountAsync();
-
-	//	//var paginationMetaData = new PaginationMetaData( totalItemCount, currentPage: setPage, setPageSize);
-	//	var pagedMovieWithGenreDto = await _unitOfWork.Movies.GetAllMoviesAsync(setPageSize, setPage);
-
-	//	return (_mapper.Map<IEnumerable<MovieWithGenreDto>>(pagedMovieWithGenreDto), paginationMetaData);
-	//}
-
 
 	/// <inheritdoc/>
 	public async Task<MovieWithGenreDto> GetMovieAsync(int id)

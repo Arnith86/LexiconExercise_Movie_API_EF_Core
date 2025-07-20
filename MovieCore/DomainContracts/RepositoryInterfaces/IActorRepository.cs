@@ -12,6 +12,6 @@ public interface IActorRepository : IRepositoryQueries<Actor>
 	Task<bool> AnyAsync(int id);
 	Task<Actor?> GetActorAsync(int id, bool changeTracker = false);
 	Task<IPageList<Actor>> GetAllActorsAsync(
-		MovieRequestParameters requestParameters,
+		ActorRequestParameters requestParameters,
 		bool changeTracker = false);
 }

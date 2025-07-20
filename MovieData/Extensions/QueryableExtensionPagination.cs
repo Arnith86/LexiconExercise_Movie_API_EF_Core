@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using MovieCore.DomainContracts.RequestParameters;
+using MovieCore.Models.Exceptions;
 
 namespace MovieData.Extensions;
 
@@ -29,10 +30,10 @@ public static class QueryableExtensionPagination
 		int pageSize)
 	{
 		// ToDo: Handle exceptrions in exception handler
-		if (pageNumber <= 0)
-			throw new ArgumentOutOfRangeException(nameof(pageNumber), "Page number must be higher then 0");
-		if (pageSize <= 0)
-			throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be higher then 0");
+		if (pageNumber < 1)
+			throw new PaginationArgumentOutOfRangeException(nameof(pageNumber), "Page number must be higher then 0");
+		if (pageSize < 1)
+			throw new PaginationArgumentOutOfRangeException(nameof(pageSize), "Page size must be higher then 0");
 
 		int count = await source.CountAsync();
 

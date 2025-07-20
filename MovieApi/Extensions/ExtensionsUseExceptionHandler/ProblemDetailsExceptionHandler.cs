@@ -67,6 +67,16 @@ public static class ProblemDetailsExceptionHandler
 								instance: context.Request.Path
 							);
 							break;
+						case PaginationArgumentOutOfRangeException argumentOutOfRangeException: // Actor Not Found
+							statusCode = StatusCodes.Status400BadRequest;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: argumentOutOfRangeException.Title,
+								detail: argumentOutOfRangeException.Message,
+								instance: context.Request.Path
+							);
+							break;
 						default:
 							statusCode = StatusCodes.Status500InternalServerError;  // General server error
 							problemDetails = problemDetailsFactory.CreateProblemDetails(

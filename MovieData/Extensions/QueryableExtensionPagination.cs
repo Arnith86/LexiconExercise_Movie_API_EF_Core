@@ -29,7 +29,6 @@ public static class QueryableExtensionPagination
 		int pageNumber,
 		int pageSize)
 	{
-		// ToDo: Handle exceptrions in exception handler
 		if (pageNumber < 1)
 			throw new PaginationArgumentOutOfRangeException(nameof(pageNumber), "Page number must be higher then 0");
 		if (pageSize < 1)

@@ -67,7 +67,7 @@ public static class ProblemDetailsExceptionHandler
 								instance: context.Request.Path
 							);
 							break;
-						case PaginationArgumentOutOfRangeException argumentOutOfRangeException: // Actor Not Found
+						case PaginationArgumentOutOfRangeException argumentOutOfRangeException: // Paging parameters out of range
 							statusCode = StatusCodes.Status400BadRequest;
 							problemDetails = problemDetailsFactory.CreateProblemDetails(
 								context,

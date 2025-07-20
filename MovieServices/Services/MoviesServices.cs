@@ -3,6 +3,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MovieCore.DomainContracts;
+using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.MovieDtos;
 using MovieCore.Models.Entities;
 using MovieCore.Models.Exceptions;
@@ -24,6 +25,17 @@ public class MoviesServices : IMoviesServices
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
+	}
+	
+	/// <inheritdoc/>
+	public async Task<(IEnumerable<MovieWithGenreDto> moviesWithGenreDto, IPaginationMetaData metaData)> GetAllMoviesAsync(
+		MovieRequestParameters requestParameters, 
+		bool trackChanges)
+	{
+		var moviesWithMetaData = await _unitOfWork.Movies.GetAllMoviesAsync(requestParameters, trackChanges);
+		var moviesWithGenreDtos = _mapper.Map<IEnumerable<MovieWithGenreDto>>(moviesWithMetaData.Items);
+
+		return (moviesWithGenreDtos, moviesWithMetaData.MetaData);
 	}
 
 	/// <inheritdoc/>

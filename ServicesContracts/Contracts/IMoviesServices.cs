@@ -1,5 +1,5 @@
-﻿using MovieCore.Models.DTOs.MovieDtos;
-//using MovieServices;
+﻿using MovieCore.DomainContracts.RequestParameters;
+using MovieCore.Models.DTOs.MovieDtos;
 
 namespace Services.Contracts.Contracts;
 
@@ -9,16 +9,18 @@ namespace Services.Contracts.Contracts;
 public interface IMoviesServices
 {
 
-	///// <summary>
-	///// Retrieves a paginated collection of movies with associated genre information.
-	///// </summary>
-	///// <param name="pageSize">The number of movies to include per page.</param>
-	///// <param name="page">The page number to retrieve.</param>
-	///// <returns>
-	///// A tuple containing a collection of <see cref="MovieWithGenreDto"/> and 
-	///// pagination metadata implementing <see cref="IPaginationMetaData"/>.
-	///// </returns>
-	//Task<(IEnumerable<MovieWithGenreDto>, IPaginationMetaData)> GetAllMoviesAsync(int pageSize, int page);
+	/// <summary>
+	/// Retrieves a paginated collection of movies with associated genre information.
+	/// </summary>
+	/// <param name="requestParameters">Parameters specifying pagination settings, such as page number and page size.</param>
+	/// <param name="trackChanges">Indicates whether to track changes in the underlying entities (default is <c>false</c>).</param>
+	/// <returns>
+	/// A tuple containing a collection of <see cref="MovieWithGenreDto"/> and 
+	/// pagination metadata implementing <see cref="IPaginationMetaData"/>.
+	/// </returns>
+	Task<(IEnumerable<MovieWithGenreDto> moviesWithGenreDto, IPaginationMetaData metaData)> GetAllMoviesAsync(
+		MovieRequestParameters requestParameters,
+		bool trackChanges = false);
 
 	/// <summary>
 	/// Retrieves a single movie by its ID, including its genre information.

@@ -1,4 +1,5 @@
-﻿using MovieCore.Models.DTOs.MovieDtos;
+﻿using MovieCore.DomainContracts.RequestParameters;
+using MovieCore.Models.DTOs.MovieDtos;
 using MovieCore.Models.Entities;
 
 
@@ -12,7 +13,9 @@ namespace MovieCore.DomainContracts.RepositoryInterfaces;
 /// </summary>
 public interface IMovieRepository : IRepositoryQueries<VideoMovie>, IRepositoryActions<VideoMovie>
 {
-	Task<List<VideoMovie>> GetAllMoviesAsync(int pageSize, int page, bool changeTracker = false);
+	Task<IPageList<VideoMovie>> GetAllMoviesAsync(
+		MovieRequestParameters requestParameters, 
+		bool changeTracker = false);
 	Task<VideoMovie?> GetMovieAsync(int id, bool changeTracker = false);
 	Task<bool> AnyAsync(int id);
 	Task<VideoMovie?> GetMovieDetailsAsync(int id, bool changeTracker = false);

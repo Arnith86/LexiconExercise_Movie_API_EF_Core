@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieActorDto;
+using MovieCore.Models.Entities;
 using Services.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json;
@@ -32,7 +33,7 @@ namespace MovieApi.Controllers
 		[ProducesResponseType(typeof(ActorDto), StatusCodes.Status200OK)]
 		[SwaggerOperation(
 			Summary = "Returns a single page of actors.",
-			Description =	"Returns a single page of actors, with page size, number, and " +
+			Description = "Returns a single page of actors, with page size, number, and " +
 							"option of adding movies being assigned in the request."
 		)]
 		public async Task<ActionResult<IEnumerable<ActorDto>>> GetActors(
@@ -74,10 +75,35 @@ namespace MovieApi.Controllers
 		/// <response code="201">The actor was successfully created.</response>
 		/// <response code="400">The request data is invalid.</response>
 		[HttpPost]
+		[SwaggerOperation(
+			Summary = "Adds a new instance of actor.",
+			Description = "Adds a new instance of actor to the database."
+		)]
+		[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ActorDto))]
+		[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
 		public async Task<ActionResult<ActorDto>> PostActor(ActorCreateDto actorCreateDto)
 		{
 			(ActorDto actorDto, int actorId) = await _serviceManager.ActorServices.AddActorAsync(actorCreateDto);
-			return CreatedAtAction(nameof(GetActor), new { id = actorId }, actorDto );
+			return CreatedAtAction(nameof(GetActor), new { id = actorId }, actorDto);
+		}
+
+		// PUT /api/actors/5
+		/// <summary>Updates an instance of actor.</summary>
+		/// <param name="id">The id of the actor to update.</param>
+		/// <param name="actorUpdateDto">The updated actor data. </param>
+		/// <returns>No content on success; NotFound if the actor is not found; error if concurrency conflict occurs.</returns>
+		[HttpPut("{id}")]
+		[SwaggerOperation(
+			Summary = "Updates the data of a single instance of actor.",
+			Description = "Updates an existing actors name, year and birth. Requires the actor Id and the updated data."
+		)]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+		[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+		public async Task<IActionResult> PutActor(int id, ActorUpdateDto actorUpdateDto)
+		{
+			await _serviceManager.ActorServices.UpdateActorAsync(id, actorUpdateDto);
+			return NoContent();
 		}
 
 		// POST /api/movies/5/actors

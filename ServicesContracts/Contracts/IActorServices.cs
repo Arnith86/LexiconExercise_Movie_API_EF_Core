@@ -47,4 +47,15 @@ public interface IActorServices
 	/// <param name="movieId">The ID of the movie to associate the actor with.</param>
 	/// <returns>A task representing the asynchronous operation. Returns <c>true</c> if the association was successful.</returns>
 	Task<bool> LinkMovieAndActorAsync(MovieActorCreateDto movieActorCreateDto, int movieId);
+
+	/// <summary>
+	/// Updates an existing actor's information based on the provided actor ID and updated data.
+	/// </summary>
+	/// <param name="actorId">The ID of the actor to update.</param>
+	/// <param name="actorUpdateDto">The updated actor data, including name and birth year.</param>
+	/// <returns>
+	/// A boolean indicating whether the update was successful.
+	/// Returns <c>true</c> if the actor was found and updated; otherwise, <c>false</c>.
+	/// </returns>
+	Task<bool> UpdateActorAsync(int actorId, ActorUpdateDto actorUpdateDto);
 }

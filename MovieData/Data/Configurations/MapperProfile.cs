@@ -36,6 +36,7 @@ public class MapperProfile : Profile
 			.ForMember(dest => dest.VideoMovies, opt => opt.MapFrom(src => 
 				src.MovieActors!.Select(ma => ma.Movie).ToList()));
 		CreateMap<ActorCreateDto, Actor>();
+		CreateMap<ActorUpdateDto, Actor>();
 
 
 	}

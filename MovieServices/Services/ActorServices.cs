@@ -1,12 +1,14 @@
 ﻿// Ignore Spelling: Dto
 
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MovieCore.DomainContracts;
 using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieActorDto;
 using MovieCore.Models.Entities;
 using MovieCore.Models.Exceptions;
+using Services.Contracts;
 using ServicesContracts.Contracts;
 
 namespace MovieServices.Services;
@@ -76,6 +78,28 @@ public class ActorServices : IActorServices
 		movie.MovieActors.Add(_mapper.Map<MovieActor>(movieActorCreateDto));
 
 		await _unitOfWork.CompleteAsync();
+
+		return true;
+	}
+
+	/// <inheritdoc/>
+	public async Task<bool> UpdateActorAsync(int actorId, ActorUpdateDto actorUpdateDto)
+	{
+		Actor? actor = await _unitOfWork.Actors.GetActorAsync(actorId, changeTracker: true);
+
+		if (actor is null) throw new ActorNotFoundException(actorId);
+
+		_mapper.Map(actorUpdateDto, actor);
+
+		try
+		{
+			await _unitOfWork.CompleteAsync();
+		}
+		catch (DbUpdateConcurrencyException)
+		{
+			if (!await _unitOfWork.Actors.AnyAsync(actorId)) throw new ActorNotFoundException(actorId);
+			else throw;
+		}
 
 		return true;
 	}

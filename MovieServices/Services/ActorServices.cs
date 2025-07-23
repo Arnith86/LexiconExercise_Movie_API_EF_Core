@@ -27,6 +27,17 @@ public class ActorServices : IActorServices
 	}
 
 	/// <inheritdoc/>
+	public async Task<(ActorDto actorDto, int actorId)> AddActorAsync (ActorCreateDto actorCreateDto)
+	{
+		Actor actor = _mapper.Map<Actor>(actorCreateDto);
+
+		_unitOfWork.Actors.Add(actor);
+		await _unitOfWork.CompleteAsync();
+
+		return (_mapper.Map<ActorDto>(actor), actor.Id);
+	}
+
+	/// <inheritdoc/>
 	public async Task<ActorDto> GetActorAsync(int id)
 	{
 		var actor = await _unitOfWork.Actors.GetActorAsync(id);

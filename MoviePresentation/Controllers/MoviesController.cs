@@ -10,7 +10,7 @@ using System.Text.Json;
 
 namespace MovieApi.Controllers;
 
-[Route("api/movie")]
+[Route("api/movies")]
 [ApiController]
 public class MoviesController : ControllerBase
 {
@@ -138,7 +138,7 @@ public class MoviesController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
 	public async Task<ActionResult<MovieWithGenreIdDto>> PostMovie(MovieCreateDto movieCreateDto)
 	{
-		var (movieWithGenreIdDto, movieId) =  await _serviceManager.MovieServices.AddMovieAsync(movieCreateDto);
+		(MovieWithGenreIdDto movieWithGenreIdDto, int movieId) =  await _serviceManager.MovieServices.AddMovieAsync(movieCreateDto);
 
 		return CreatedAtAction("GetMovie", new { id = movieId}, movieWithGenreIdDto);
 	}

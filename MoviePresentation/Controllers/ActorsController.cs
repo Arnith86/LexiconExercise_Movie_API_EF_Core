@@ -65,6 +65,21 @@ namespace MovieApi.Controllers
 			Ok(await _serviceManager.ActorServices.GetActorAsync(id));
 
 
+		// POST /api/actors
+		/// <summary>
+		/// Creates a new actor with the provided information.
+		/// </summary>
+		/// <param name="actorCreateDto">The data required to create a new actor, including name and birth year.</param>
+		/// <returns>Returns a <see cref="CreatedAtActionResult"/> with the created <see cref="ActorDto"/>.</returns>
+		/// <response code="201">The actor was successfully created.</response>
+		/// <response code="400">The request data is invalid.</response>
+		[HttpPost]
+		public async Task<ActionResult<ActorDto>> PostActor(ActorCreateDto actorCreateDto)
+		{
+			(ActorDto actorDto, int actorId) = await _serviceManager.ActorServices.AddActorAsync(actorCreateDto);
+			return CreatedAtAction(nameof(GetActor), new { id = actorId }, actorDto );
+		}
+
 		// POST /api/movies/5/actors
 		/// <summary>
 		/// Associates an existing actor with an existing movie, specifying their role.

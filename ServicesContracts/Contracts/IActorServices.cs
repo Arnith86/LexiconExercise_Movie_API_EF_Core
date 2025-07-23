@@ -32,6 +32,15 @@ public interface IActorServices
 		bool trackChanges = false);
 
 	/// <summary>
+	/// Creates a new actor entity based on the provided data.
+	/// </summary>
+	/// <param name="actorCreateDto">The data used to create the actor.</param>
+	/// <param name="trackChanges">Indicates whether change tracking should be enabled during creation.</param>
+	/// <returns>A <see cref="ActorDto"/> representing the newly created actor.</returns>
+	Task<(ActorDto actorDto, int actorId)> AddActorAsync(ActorCreateDto actorCreateDto); 
+
+
+	/// <summary>
 	/// Links an actor to a movie by creating an association between them.
 	/// </summary>
 	/// <param name="movieActorCreateDto">The data transfer object containing the actor's ID.</param>

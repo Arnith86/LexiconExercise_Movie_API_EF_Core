@@ -24,11 +24,12 @@ public class MovieRepository : RepositoryBase<VideoMovie>, IMovieRepository
 	public async Task<bool> AnyAsync(int id) => await FindAnyAsync(m => m.Id.Equals(id));
 
 
-	public async Task<IPageList<VideoMovie>> GetAllMoviesAsync(
-		MovieRequestParameters requestParameters, bool changeTracker = false)
-		=> await GetAll(changeTracker)
-			.Include(m => m.MoviesGenre)
-			.ToPageListAsync(requestParameters.PageNumber, requestParameters.PageSize);
+	public async Task<IPageList<VideoMovie>> GetAllMoviesAsync(	
+		MovieRequestParameters requestParameters, 
+		bool changeTracker = false) => 
+			await GetAll(changeTracker)
+				.Include(m => m.MoviesGenre)
+				.ToPageListAsync(requestParameters.PageNumber, requestParameters.PageSize);
 
 	public async Task<VideoMovie?> GetMovieAsync(int id, bool changeTracker = false) =>
 		await GetByCondition(m => m.Id.Equals(id), changeTracker)

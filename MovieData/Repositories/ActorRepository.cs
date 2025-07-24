@@ -20,8 +20,8 @@ public class ActorRepository : RepositoryBase<Actor>, IActorRepository
 
 	public async Task<bool> AnyAsync(int id) => await FindAnyAsync(a => a.Id.Equals(id));
 
-	public async Task<Actor?> GetActorAsync(int id, bool changeTracker = false)
-		=> await GetByCondition(a => a.Id.Equals(id), changeTracker).FirstOrDefaultAsync();
+	public async Task<Actor?> GetActorAsync(int id, bool changeTracker = false) => 
+		await GetByCondition(a => a.Id.Equals(id), changeTracker).FirstOrDefaultAsync();
 
 	public async Task<IPageList<Actor>> GetAllActorsAsync(
 		ActorRequestParameters requestParameters, 

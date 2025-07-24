@@ -14,7 +14,7 @@ public interface IReviewServices
 	/// <returns>
 	/// A task that represents the asynchronous operation. The task result contains a collection of review DTOs.
 	/// </returns>
-	Task<IEnumerable<ReviewDto>> GetAllReviews(int movieId);
+	Task<IEnumerable<ReviewDto>> GetAllReviewsAsync(int movieId);
 
 	/// <summary>
 	/// Adds a new review for a movie.
@@ -22,4 +22,11 @@ public interface IReviewServices
 	/// <param name="reviewCreateDto">The data required to create a new review, including rating, comment, and associated movie ID.</param>
 	/// <returns>A <see cref="ReviewDto"/> representing the newly created review, including its details.</returns>
 	Task<ReviewDto> AddReview(ReviewCreateDto reviewCreateDto);
+
+	/// <summary>
+	/// Removes a review associated with a movie.
+	/// </summary>
+	/// <param name="reviewId">The Id of the given review to remove.</param>
+	/// <returns><c>true<c>, if the review was removed.</returns>
+	Task<bool> RemoveReviewAsync(int reviewId);
 }

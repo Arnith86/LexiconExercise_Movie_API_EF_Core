@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Dto
 
 using Microsoft.EntityFrameworkCore;
+using MovieCore.DomainContracts;
 using MovieCore.DomainContracts.RepositoryInterfaces;
 using MovieCore.Models.DTOs.ReviewDTOs;
 using MovieCore.Models.Entities;
@@ -27,4 +28,7 @@ public class ReviewRepository : RepositoryBase<Review>, IReviewRepository
 				Comment = r.Comment,
 				Rating = r.Rating
 			}).ToListAsync();
+
+	public async Task<Review?> GetReviewAsync(int reviewId, bool changeTracker = false) => 
+		await GetByCondition(r => r.Id.Equals(reviewId), changeTracker).FirstOrDefaultAsync();
 }

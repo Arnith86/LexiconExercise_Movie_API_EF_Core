@@ -40,12 +40,26 @@ public class ReviewServices : IReviewServices
 	}
 
 	/// <inheritdoc/>
-	public async Task<IEnumerable<ReviewDto>> GetAllReviews(int movieId)
+	public async Task<IEnumerable<ReviewDto>> GetAllReviewsAsync(int movieId)
 	{
 		var movieExists = await _unitOfWork.Movies.AnyAsync(movieId);
 
 		if (movieExists == false) throw new MovieNotFoundException(movieId);
 		
 		return await _unitOfWork.Reviews.GetAllReviewsForMovieAsync(movieId, changeTracker: false);
+	}
+
+
+	/// <inheritdoc/>
+	public async Task<bool> RemoveReviewAsync(int reviewId)
+	{
+		var review = await _unitOfWork.Reviews.GetReviewAsync(reviewId, changeTraker: true);
+
+		if (review is null) throw new ReviewNotFoundException(reviewId);
+
+		_unitOfWork.Reviews.Remove(review);
+		await _unitOfWork.CompleteAsync();
+
+		return true;
 	}
 }

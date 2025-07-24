@@ -9,5 +9,6 @@ namespace MovieCore.DomainContracts.RepositoryInterfaces;
 /// </summary>
 public interface IReviewRepository : IRepositoryQueries<Review>, IRepositoryActions<Review>
 {
-	Task<List<ReviewDto>> GetAllReviewsForMovieAsync(int movieId, bool changeTracker = false); 
+	Task<List<ReviewDto>> GetAllReviewsForMovieAsync(int movieId, bool changeTracker = false);
+	Task<Review?> GetReviewAsync(int reviewId, bool changeTraker = false);
 }

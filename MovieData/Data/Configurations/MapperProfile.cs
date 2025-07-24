@@ -2,6 +2,7 @@
 using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieActorDto;
 using MovieCore.Models.DTOs.MovieDtos;
+using MovieCore.Models.DTOs.ReviewDTOs;
 using MovieCore.Models.Entities;
 
 namespace MovieData.Data.Configurations;
@@ -23,21 +24,20 @@ public class MapperProfile : Profile
 			.ForMember(dest => dest.Budget, opt => opt.MapFrom(src => src.MoviesDetails!.Budget));
 
 		CreateMap<MovieCreateDto, VideoMovie>();
-
 		CreateMap<VideoMovie, MovieWithGenreIdDto>();
-
 		CreateMap<MovieWithGenreIdUpdateDto, VideoMovie>();
-
 		CreateMap<MovieActorCreateDto, MovieActor>();
 
 
 		// Actor profiles
 		CreateMap<Actor, ActorDto>()
-			.ForMember(dest => dest.VideoMovies, opt => opt.MapFrom(src => 
-				src.MovieActors!.Select(ma => ma.Movie).ToList()));
+			.ForMember(dest => dest.VideoMovies, opt => opt.MapFrom(src => src.MovieActors!.Select(ma => ma.Movie).ToList()));
 		CreateMap<ActorCreateDto, Actor>();
 		CreateMap<ActorUpdateDto, Actor>();
 
 
+		// Review profile
+		CreateMap<ReviewCreateDto, Review>();
+		CreateMap<Review, ReviewDto>();
 	}
 }

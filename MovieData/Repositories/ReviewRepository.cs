@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// Ignore Spelling: Dto
+
+using Microsoft.EntityFrameworkCore;
 using MovieCore.DomainContracts.RepositoryInterfaces;
 using MovieCore.Models.DTOs.ReviewDTOs;
 using MovieCore.Models.Entities;

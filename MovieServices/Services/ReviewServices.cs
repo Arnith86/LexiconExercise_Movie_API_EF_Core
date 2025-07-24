@@ -1,6 +1,9 @@
-﻿using AutoMapper;
+﻿// Ignore Spelling: Dto
+
+using AutoMapper;
 using MovieCore.DomainContracts;
 using MovieCore.Models.DTOs.ReviewDTOs;
+using MovieCore.Models.Entities;
 using MovieCore.Models.Exceptions;
 using ServicesContracts.Contracts;
 
@@ -19,6 +22,21 @@ public class ReviewServices : IReviewServices
 	{
 		_mapper = mapper;
 		_unitOfWork = unitOfWork;
+	}
+
+	/// <inheritdoc/>
+	public async Task<ReviewDto> AddReview(ReviewCreateDto reviewCreateDto)
+	{
+		VideoMovie? movie = await _unitOfWork.Movies.GetMovieAsync(reviewCreateDto.MovieId, changeTracker: true);
+
+		if (movie is null) throw new MovieNotFoundException(reviewCreateDto.MovieId);
+
+		Review review = _mapper.Map<Review>(reviewCreateDto);
+
+		movie.Reviews.Add(review);
+		await _unitOfWork.CompleteAsync();
+
+		return _mapper.Map<ReviewDto>(review);
 	}
 
 	/// <inheritdoc/>

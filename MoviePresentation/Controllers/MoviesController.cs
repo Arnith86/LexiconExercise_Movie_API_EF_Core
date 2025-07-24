@@ -156,9 +156,9 @@ public class MoviesController : ControllerBase
 	/// <response code="400">No genre with the specified MovieGenreIdwas found.</response>
 	[HttpPut("{id}")]
 	[SwaggerOperation(
-	Summary = "Update an existing movie.",
-	Description = "Updates an existing movie's title, year, duration, and associated genre. Requires the movie ID and the updated data."
-)]
+		Summary = "Update an existing movie.",
+		Description = "Updates an existing movie's title, year, duration, and associated genre. Requires the movie ID and the updated data."
+	)]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]

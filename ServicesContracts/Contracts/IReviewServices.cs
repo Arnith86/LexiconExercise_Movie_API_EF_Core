@@ -15,4 +15,11 @@ public interface IReviewServices
 	/// A task that represents the asynchronous operation. The task result contains a collection of review DTOs.
 	/// </returns>
 	Task<IEnumerable<ReviewDto>> GetAllReviews(int movieId);
+
+	/// <summary>
+	/// Adds a new review for a movie.
+	/// </summary>
+	/// <param name="reviewCreateDto">The data required to create a new review, including rating, comment, and associated movie ID.</param>
+	/// <returns>A <see cref="ReviewDto"/> representing the newly created review, including its details.</returns>
+	Task<ReviewDto> AddReview(ReviewCreateDto reviewCreateDto);
 }

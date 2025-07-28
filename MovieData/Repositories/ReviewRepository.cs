@@ -19,6 +19,9 @@ public class ReviewRepository : RepositoryBase<Review>, IReviewRepository
 	{
 	}
 
+	public async Task<int> CountReviewsForMovieAsync(int movieId) => 
+		await DbSet.CountAsync(r => r.MovieId.Equals(movieId));
+
 	public async Task<List<ReviewDto>> GetAllReviewsForMovieAsync(int movieId, bool changeTracker = false) =>
 		await GetByCondition(r => r.MovieId.Equals(movieId))
 			.Select(r => new ReviewDto

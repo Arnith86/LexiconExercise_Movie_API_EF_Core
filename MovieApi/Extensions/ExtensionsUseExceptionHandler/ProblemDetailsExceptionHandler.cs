@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using MovieCore.Models.Exceptions;
+using MovieCore.Models.Exceptions.BusinessRuleVilationExceptions;
 
 namespace MovieApi.Extensions.ExtensionsUseExceptionHandler;
 
@@ -84,6 +85,16 @@ public static class ProblemDetailsExceptionHandler
 								statusCode,
 								title: argumentOutOfRangeException.Title,
 								detail: argumentOutOfRangeException.Message,
+								instance: context.Request.Path
+							);
+							break;
+						case MaximumReviewsReachedException maximumReviewsReachedException: // Maximum reviews reached
+							statusCode = StatusCodes.Status400BadRequest;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: maximumReviewsReachedException.Title,
+								detail: maximumReviewsReachedException.Message,
 								instance: context.Request.Path
 							);
 							break;

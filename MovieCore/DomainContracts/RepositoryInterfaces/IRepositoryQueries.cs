@@ -9,7 +9,7 @@ namespace MovieCore.DomainContracts.RepositoryInterfaces;
 /// <typeparam name="T">The entity type, constrained to inherit from <see cref="EntityBase"/>.</typeparam>
 public interface IRepositoryQueries<T> where T : EntityBase
 {
-
+	
 	/// <summary>
 	/// Asynchronously determines whether any entities match the given condition.
 	/// </summary>

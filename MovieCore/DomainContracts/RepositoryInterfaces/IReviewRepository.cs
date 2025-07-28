@@ -11,4 +11,5 @@ public interface IReviewRepository : IRepositoryQueries<Review>, IRepositoryActi
 {
 	Task<List<ReviewDto>> GetAllReviewsForMovieAsync(int movieId, bool changeTracker = false);
 	Task<Review?> GetReviewAsync(int reviewId, bool changeTraker = false);
+	Task<int> CountReviewsForMovieAsync(int movieId);
 }

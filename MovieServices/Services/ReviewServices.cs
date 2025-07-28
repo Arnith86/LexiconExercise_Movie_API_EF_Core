@@ -5,6 +5,7 @@ using MovieCore.DomainContracts;
 using MovieCore.Models.DTOs.ReviewDTOs;
 using MovieCore.Models.Entities;
 using MovieCore.Models.Exceptions;
+using MovieCore.Models.Exceptions.BusinessRuleVilationExceptions;
 using ServicesContracts.Contracts;
 
 namespace MovieServices.Services;
@@ -27,9 +28,12 @@ public class ReviewServices : IReviewServices
 	/// <inheritdoc/>
 	public async Task<ReviewDto> AddReview(ReviewCreateDto reviewCreateDto)
 	{
-		VideoMovie? movie = await _unitOfWork.Movies.GetMovieAsync(reviewCreateDto.MovieId, changeTracker: true);
+		VideoMovie? movie =
+			await _unitOfWork.Movies.GetMovieAsync(reviewCreateDto.MovieId, changeTracker: true);
 
 		if (movie is null) throw new MovieNotFoundException(reviewCreateDto.MovieId);
+
+		if (await MoreThenNineReviews(movie)) throw new MaximumReviewsReachedException(movie.Id);
 
 		Review review = _mapper.Map<Review>(reviewCreateDto);
 
@@ -37,6 +41,11 @@ public class ReviewServices : IReviewServices
 		await _unitOfWork.CompleteAsync();
 
 		return _mapper.Map<ReviewDto>(review);
+	}
+
+	private async Task<bool> MoreThenNineReviews(VideoMovie movie)
+	{
+		return (await _unitOfWork.Reviews.CountReviewsForMovieAsync(movie.Id)) > 9;
 	}
 
 	/// <inheritdoc/>

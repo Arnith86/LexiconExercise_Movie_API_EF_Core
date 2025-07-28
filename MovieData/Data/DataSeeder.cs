@@ -123,7 +123,7 @@ internal class DataSeeder
 
 	private static IList<MovieGenre> GenerateMovieGenre()
 	{
-		List<string> genreList = new List<string> { "Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance" };
+		List<string> genreList = new List<string> { "Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance", "Documentary" };
 		List<MovieGenre> movieGenres = new List<MovieGenre>();
 
 

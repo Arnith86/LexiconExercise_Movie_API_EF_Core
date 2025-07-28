@@ -73,7 +73,6 @@ public class ActorServices : IActorServices
 		if (!actorExists)
 			throw new ActorNotFoundException(movieActorCreateDto.ActorId);
 
-		// MovieActor movieActor = _mapper.Map<MovieActor>(movieActorCreateDto);
 
 		movie.MovieActors.Add(_mapper.Map<MovieActor>(movieActorCreateDto));
 

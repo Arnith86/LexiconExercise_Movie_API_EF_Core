@@ -73,6 +73,8 @@ public class MoviesServices : IMoviesServices
 	/// <inheritdoc/>
 	public async Task<(MovieWithGenreIdDto mwgiDto, int movieId)> AddMovieAsync(MovieCreateDto movieCreateDto)
 	{
+		if (movieCreateDto.MovieGenreId == 0) throw new MovieGenreInvalidArgumentException();
+		
 		var genre = await _unitOfWork.MovieGenres.AnyAsync(movieCreateDto.MovieGenreId);
 
 		if (!genre) throw new MovieGenreNotFoundException(movieCreateDto.MovieGenreId);

@@ -67,6 +67,16 @@ public static class ProblemDetailsExceptionHandler
 								instance: context.Request.Path
 							);
 							break;
+						case ReviewNotFoundException reviewNotFoundException: // Review Not Found
+							statusCode = StatusCodes.Status404NotFound;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: reviewNotFoundException.Title,
+								detail: reviewNotFoundException.Message,
+								instance: context.Request.Path
+							);
+							break;
 						case PaginationArgumentOutOfRangeException argumentOutOfRangeException: // Paging parameters out of range
 							statusCode = StatusCodes.Status400BadRequest;
 							problemDetails = problemDetailsFactory.CreateProblemDetails(

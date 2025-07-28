@@ -1,4 +1,6 @@
-﻿namespace MovieCore.Models.DTOs.MovieDtos;
+﻿// Ignore Spelling: Dto
+
+namespace MovieCore.Models.DTOs.MovieDtos;
 
 public class MovieWithGenreDetailsDto : MovieWithGenreDto
 {

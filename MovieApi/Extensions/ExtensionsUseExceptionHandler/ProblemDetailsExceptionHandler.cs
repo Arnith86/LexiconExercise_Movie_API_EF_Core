@@ -108,6 +108,17 @@ public static class ProblemDetailsExceptionHandler
 								instance: context.Request.Path
 							);
 							break;
+						case DuplicateMovieDetailsAssignmentException 
+							 duplicateMovieDetailsAssignmentException: // Duplicate movieDetails assignment
+							statusCode = StatusCodes.Status400BadRequest;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: duplicateMovieDetailsAssignmentException.Title,
+								detail: duplicateMovieDetailsAssignmentException.Message,
+								instance: context.Request.Path
+							);
+							break;
 						default:
 							statusCode = StatusCodes.Status500InternalServerError;  // General server error
 							problemDetails = problemDetailsFactory.CreateProblemDetails(

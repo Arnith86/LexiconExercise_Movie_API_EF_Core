@@ -143,6 +143,30 @@ public class MoviesController : ControllerBase
 		return CreatedAtAction("GetMovie", new { id = movieId}, movieWithGenreIdDto);
 	}
 
+	// POST: api/movies/details
+	/// <summary>
+	/// Associates detailed information with an existing movie.
+	/// </summary>
+	/// <param name="movieDetailsCreateDto">
+	/// The detailed movie data to be linked, including synopsis, language, budget, and the target movie's ID.
+	/// </param>
+	/// <returns><see cref="NoContentResult"/> if successfully linked; otherwise, appropriate error responses.</returns>
+	/// <response code="204">The movie details were successfully linked to the specified movie.</response>
+	/// <response code="400">The request body was invalid or movie already has movie details.</response>
+	/// <response code="404">The specified movie could not be found.</response>
+	[HttpPost("details")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+	[SwaggerOperation(
+		Summary = "Link detailed information to a movie",
+		Description = "Links additional details (such as synopsis, language, and budget) to an existing movie by movie ID."
+	)]
+	public async Task<IActionResult> LinkMovieDetailsAndMovie(MovieDetailsCreateDto movieDetailsCreateDto)
+	{
+		await _serviceManager.MovieServices.LinkMovieAndMovieDetailsAsync(movieDetailsCreateDto);
+		return NoContent();
+	}
 
 	// PUT: api/Movies/5
 	/// <summary>

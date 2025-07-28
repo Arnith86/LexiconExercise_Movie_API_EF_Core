@@ -27,6 +27,9 @@ public class MapperProfile : Profile
 		CreateMap<VideoMovie, MovieWithGenreIdDto>();
 		CreateMap<MovieWithGenreIdUpdateDto, VideoMovie>();
 		CreateMap<MovieActorCreateDto, MovieActor>();
+		
+		// MovieDitails profiles
+		CreateMap<MovieDetailsCreateDto, MovieDetails>();
 
 
 		// Actor profiles

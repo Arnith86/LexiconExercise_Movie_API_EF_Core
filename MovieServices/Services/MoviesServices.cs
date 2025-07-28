@@ -7,6 +7,7 @@ using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.MovieDtos;
 using MovieCore.Models.Entities;
 using MovieCore.Models.Exceptions;
+using MovieCore.Models.Exceptions.BusinessRuleViolationExceptions;
 using Services.Contracts.Contracts;
 
 namespace MovieServices.Services;
@@ -126,4 +127,26 @@ public class MoviesServices : IMoviesServices
 		return true;
 	}
 
+	public async Task<bool> LinkMovieAndMovieDetailsAsync(MovieDetailsCreateDto movieDetailsCreateDto)
+	{
+		int movieId = movieDetailsCreateDto.MovieId;
+		VideoMovie? movie = await _unitOfWork.Movies.GetMovieAsync(movieId, changeTracker: true);
+
+		if (movie is null) throw new MovieNotFoundException(movieId);
+		
+		if (await DoesMovieHaveDetailsAlready(movieId)) 
+			throw new DuplicateMovieDetailsAssignmentException(movieId);
+
+		MovieDetails movieDetails = _mapper.Map<MovieDetails>(movieDetailsCreateDto);
+
+		movie.MoviesDetails = movieDetails;
+		await _unitOfWork.CompleteAsync();
+
+		return true;
+	}
+
+	private Task<bool> DoesMovieHaveDetailsAlready(int movieId)
+	{
+		return _unitOfWork.Movies.AlreadyHasMovieDetailsAsync(movieId);
+	}
 }

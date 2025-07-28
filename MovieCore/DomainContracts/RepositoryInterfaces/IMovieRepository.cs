@@ -13,6 +13,7 @@ namespace MovieCore.DomainContracts.RepositoryInterfaces;
 /// </summary>
 public interface IMovieRepository : IRepositoryQueries<VideoMovie>, IRepositoryActions<VideoMovie>
 {
+	Task<bool> AlreadyHasMovieDetailsAsync(int movieId);
 	Task<IPageList<VideoMovie>> GetAllMoviesAsync(
 		MovieRequestParameters requestParameters, 
 		bool changeTracker = false);

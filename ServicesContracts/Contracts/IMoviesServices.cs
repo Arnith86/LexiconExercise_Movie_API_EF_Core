@@ -55,6 +55,16 @@ public interface IMoviesServices
 	Task<(MovieWithGenreIdDto mwgiDto, int movieId)> AddMovieAsync(MovieCreateDto movieCreateDto);
 
 	/// <summary>
+	/// Associate the supplied movieDetails with specified movie.
+	/// </summary>
+	/// <param name="movieDetailsCreateDto">
+	/// Contains the movie details data, and the id of movie to associate with.
+	/// </param>
+	/// <returns>True, if linked successfully.</returns>
+	Task<bool> LinkMovieAndMovieDetailsAsync(MovieDetailsCreateDto movieDetailsCreateDto);
+
+
+	/// <summary>
 	/// Updates an existing movie with new title, year, duration, and genre.
 	/// </summary>
 	/// <param name="id">The ID of the movie to update.</param>

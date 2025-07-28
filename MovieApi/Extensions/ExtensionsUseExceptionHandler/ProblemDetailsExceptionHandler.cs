@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using MovieCore.Models.Exceptions;
-using MovieCore.Models.Exceptions.BusinessRuleVilationExceptions;
+using MovieCore.Models.Exceptions.BusinessRuleViolationExceptions;
 
 namespace MovieApi.Extensions.ExtensionsUseExceptionHandler;
 
@@ -95,6 +95,16 @@ public static class ProblemDetailsExceptionHandler
 								statusCode,
 								title: maximumReviewsReachedException.Title,
 								detail: maximumReviewsReachedException.Message,
+								instance: context.Request.Path
+							);
+							break;
+						case DuplicateActorAssignmentException duplicateActorAssignmentException: // Duplicate actor assignment
+							statusCode = StatusCodes.Status400BadRequest;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: duplicateActorAssignmentException.Title,
+								detail: duplicateActorAssignmentException.Message,
 								instance: context.Request.Path
 							);
 							break;

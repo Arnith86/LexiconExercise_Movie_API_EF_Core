@@ -114,7 +114,7 @@ namespace MovieApi.Controllers
 		/// <param name="movieActorCreateDto">The actor ID and their role in the movie.</param>
 		/// <returns>No content on success; BadRequest if movie or actor ID is invalid.</returns>
 		/// <response code="204">The actor was successfully associated with the movie.</response>
-		/// <response code="400">Invalid movie or actor ID was provided.</response>
+		/// <response code="400">Invalid movie or actor ID was provided, or actor is already assigned to movie</response>
 		[SwaggerOperation(
 			Summary = "Add an actor to a movie.",
 			Description = "Associates an existing actor with an existing movie by specifying their role. " +

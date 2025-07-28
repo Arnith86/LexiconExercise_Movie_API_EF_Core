@@ -14,4 +14,5 @@ public interface IActorRepository : IRepositoryQueries<Actor>, IRepositoryAction
 	Task<IPageList<Actor>> GetAllActorsAsync(
 		ActorRequestParameters requestParameters,
 		bool changeTracker = false);
+	Task<bool> IsActorAssignedToMovie(int actorId, int movieId);
 }

@@ -39,4 +39,12 @@ public class ActorRepository : RepositoryBase<Actor>, IActorRepository
 			.ThenInclude(m => m.Movie)
 			.ToPageListAsync(requestParameters.PageNumber, requestParameters.PageSize);
 	}
+
+	public async Task<bool> IsActorAssignedToMovie(int actorId, int movieId) =>
+		await DbSet.AnyAsync(
+			a => a.Id.Equals(actorId) &&
+			a.MovieActors.Any(
+				ma => ma.MovieId.Equals(movieId)
+			)
+		);
 }

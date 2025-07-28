@@ -1,4 +1,4 @@
-﻿namespace MovieCore.Models.Exceptions.BusinessRuleVilationExceptions;
+﻿namespace MovieCore.Models.Exceptions.BusinessRuleViolationExceptions;
 
 public class BusinessRuleViolationException : Exception
 {

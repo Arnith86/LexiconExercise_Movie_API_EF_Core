@@ -8,6 +8,7 @@ using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieActorDto;
 using MovieCore.Models.Entities;
 using MovieCore.Models.Exceptions;
+using MovieCore.Models.Exceptions.BusinessRuleViolationExceptions;
 using Services.Contracts;
 using ServicesContracts.Contracts;
 
@@ -63,16 +64,20 @@ public class ActorServices : IActorServices
 	/// <inheritdoc/>
 	public async Task<bool> LinkMovieAndActorAsync(MovieActorCreateDto movieActorCreateDto, int movieId)
 	{
+		int actorId = movieActorCreateDto.ActorId;
+
 		var movie = await _unitOfWork.Movies.GetMovieAsync(movieId, changeTracker: true);
 
 		if (movie is null)
 			throw new MovieNotFoundException(movieId);
 
-		bool actorExists = await _unitOfWork.Actors.AnyAsync(movieActorCreateDto.ActorId);
+		bool actorExists = await _unitOfWork.Actors.AnyAsync(actorId);
 
 		if (!actorExists)
-			throw new ActorNotFoundException(movieActorCreateDto.ActorId);
+			throw new ActorNotFoundException(actorId);
 
+		if (await IsAlreadyAssignedToMovie(actorId, movieId))
+			throw new DuplicateActorAssignmentException(actorId, movieId);
 
 		movie.MovieActors.Add(_mapper.Map<MovieActor>(movieActorCreateDto));
 
@@ -80,6 +85,10 @@ public class ActorServices : IActorServices
 
 		return true;
 	}
+
+	private Task<bool> IsAlreadyAssignedToMovie( int actorId,int movieId) =>
+		_unitOfWork.Actors.IsActorAssignedToMovie(actorId, movieId);
+	
 
 	/// <inheritdoc/>
 	public async Task<bool> UpdateActorAsync(int actorId, ActorUpdateDto actorUpdateDto)

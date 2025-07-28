@@ -47,7 +47,7 @@ namespace MovieApi.Controllers
 		/// A <see cref="ReviewDto"/> representing the newly created review.
 		/// </returns>
 		/// <response code="201">The review was successfully created.</response>
-		/// <response code="400">The input data was invalid or the movie was not found.</response>
+		/// <response code="400">The input data was invalid, the movie was not found or review numbers already exceed 10.</response>
 		[HttpPost]
 		[ProducesResponseType(typeof(ReviewDto), StatusCodes.Status201Created)]
 		[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]

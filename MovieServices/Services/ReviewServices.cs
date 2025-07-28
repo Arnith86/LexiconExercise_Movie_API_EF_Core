@@ -5,7 +5,7 @@ using MovieCore.DomainContracts;
 using MovieCore.Models.DTOs.ReviewDTOs;
 using MovieCore.Models.Entities;
 using MovieCore.Models.Exceptions;
-using MovieCore.Models.Exceptions.BusinessRuleVilationExceptions;
+using MovieCore.Models.Exceptions.BusinessRuleViolationExceptions;
 using ServicesContracts.Contracts;
 
 namespace MovieServices.Services;

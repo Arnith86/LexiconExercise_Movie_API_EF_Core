@@ -127,7 +127,8 @@ public class MoviesController : ControllerBase
 	/// <param name="movieCreateDto">The data used to create the movie.</param>
 	/// <returns>The created movie's basic information including the associated genre ID.</returns>
 	/// <response code="201">Returns the created movie with genre ID.</response>
-	/// <response code="400">Returned if the specified genre does not exist or the request is invalid.</response>
+	/// <response code="400">Returned if genre was not specified, or if a movie with the same title already exists.</response>
+	/// <response code="404">Returned if the specified genre does not exist.</response>
 	[HttpPost]
 	[SwaggerOperation(
 		Summary = "Create a new movie.",

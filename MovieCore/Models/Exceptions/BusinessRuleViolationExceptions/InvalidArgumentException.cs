@@ -1,4 +1,4 @@
-﻿namespace MovieCore.Models.Exceptions;
+﻿namespace MovieCore.Models.Exceptions.BusinessRuleViolationExceptions;
 
 public class InvalidArgumentException : Exception
 {

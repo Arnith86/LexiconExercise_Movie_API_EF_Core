@@ -108,6 +108,16 @@ public static class ProblemDetailsExceptionHandler
 								instance: context.Request.Path
 							);
 							break;
+						case MovieGenreInvalidArgumentException movieGenreInvalidArgumentException: // MovieGenre not assigned on movie creation.
+							statusCode = StatusCodes.Status400BadRequest;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: movieGenreInvalidArgumentException.Title,
+								detail: movieGenreInvalidArgumentException.Message,
+								instance: context.Request.Path
+							);
+							break;
 						case DuplicateMovieDetailsAssignmentException 
 							 duplicateMovieDetailsAssignmentException: // Duplicate movieDetails assignment
 							statusCode = StatusCodes.Status400BadRequest;
@@ -116,6 +126,17 @@ public static class ProblemDetailsExceptionHandler
 								statusCode,
 								title: duplicateMovieDetailsAssignmentException.Title,
 								detail: duplicateMovieDetailsAssignmentException.Message,
+								instance: context.Request.Path
+							);
+							break;
+						case DuplicateMovieTitleArgumentException
+							 duplicateMovieTitleArgumentException: // Duplicate of movie title found
+							statusCode = StatusCodes.Status400BadRequest;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: duplicateMovieTitleArgumentException.Title,
+								detail: duplicateMovieTitleArgumentException.Message,
 								instance: context.Request.Path
 							);
 							break;

@@ -22,7 +22,10 @@ public class MovieRepository : RepositoryBase<VideoMovie>, IMovieRepository
 	}
 
 	public async Task<bool> AnyAsync(int id) => await FindAnyAsync(m => m.Id.Equals(id));
-
+	
+	public async Task<bool> AnyAsync(string title) => 
+		await FindAnyAsync(m => m.Title.ToLower().Equals(title.ToLower()));
+	
 	public async Task<bool> AlreadyHasMovieDetailsAsync(int movieId) =>
 	await DbSet.AnyAsync(
 		m => m.Id.Equals(movieId) &&

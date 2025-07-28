@@ -75,10 +75,12 @@ public class MoviesServices : IMoviesServices
 	public async Task<(MovieWithGenreIdDto mwgiDto, int movieId)> AddMovieAsync(MovieCreateDto movieCreateDto)
 	{
 		if (movieCreateDto.MovieGenreId == 0) throw new MovieGenreInvalidArgumentException();
-		
-		var genre = await _unitOfWork.MovieGenres.AnyAsync(movieCreateDto.MovieGenreId);
 
+		var genre = await _unitOfWork.MovieGenres.AnyAsync(movieCreateDto.MovieGenreId);
 		if (!genre) throw new MovieGenreNotFoundException(movieCreateDto.MovieGenreId);
+
+		if (await DoesTitleAlreadyExist(movieCreateDto))
+			throw new DuplicateMovieTitleArgumentException(movieCreateDto.Title);
 
 		VideoMovie movie = _mapper.Map<VideoMovie>(movieCreateDto);
 
@@ -88,15 +90,17 @@ public class MoviesServices : IMoviesServices
 		return (_mapper.Map<MovieWithGenreIdDto>(movie), movie.Id);
 	}
 
+	private async Task<bool> DoesTitleAlreadyExist(MovieCreateDto movieCreateDto) =>
+		await _unitOfWork.Movies.AnyAsync(movieCreateDto.Title);
+	
+
 	/// <inheritdoc/>
 	public async Task<bool> UpdateMovieAsync(int id, MovieWithGenreIdUpdateDto movieWithGenreIdUpdateDto)
 	{
 		var movie = await _unitOfWork.Movies.GetMovieAsync(id, changeTracker: true);
-
 		if (movie is null) throw new MovieNotFoundException(id);
 
 		var genre = await _unitOfWork.MovieGenres.AnyAsync(movieWithGenreIdUpdateDto.MovieGenreId);
-
 		if (!genre) throw new MovieGenreNotFoundException(movieWithGenreIdUpdateDto.MovieGenreId);
 
 		_mapper.Map(movieWithGenreIdUpdateDto, movie);
@@ -126,6 +130,7 @@ public class MoviesServices : IMoviesServices
 
 		return true;
 	}
+
 
 	public async Task<bool> LinkMovieAndMovieDetailsAsync(MovieDetailsCreateDto movieDetailsCreateDto)
 	{

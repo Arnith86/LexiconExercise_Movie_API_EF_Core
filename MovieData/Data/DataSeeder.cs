@@ -103,7 +103,7 @@ internal class DataSeeder
 			var fDuration = _faker.Random.Int(5, 300);
 
 			int nrOfReviews = random.Next(0, 4);
-			int whichGenre = random.Next(0, movieGenres.Count - 1);
+			int whichGenre = random.Next(0, movieGenres.Count);
 
 			var movie = new VideoMovie()
 			{

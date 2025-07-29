@@ -139,7 +139,8 @@ public class MoviesController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
 	public async Task<ActionResult<MovieWithGenreIdDto>> PostMovie(MovieCreateDto movieCreateDto)
 	{
-		(MovieWithGenreIdDto movieWithGenreIdDto, int movieId) =  await _serviceManager.MovieServices.AddMovieAsync(movieCreateDto);
+		(MovieWithGenreIdDto movieWithGenreIdDto, int movieId) =  
+			await _serviceManager.MovieServices.AddMovieAsync(movieCreateDto);
 
 		return CreatedAtAction("GetMovie", new { id = movieId}, movieWithGenreIdDto);
 	}

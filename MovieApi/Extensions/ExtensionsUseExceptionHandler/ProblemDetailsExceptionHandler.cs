@@ -140,6 +140,17 @@ public static class ProblemDetailsExceptionHandler
 								instance: context.Request.Path
 							);
 							break;
+						case MaximumActorsReachedException
+							 maximumActorsReachedException: // Documentary 10 actor limit reached
+							statusCode = StatusCodes.Status400BadRequest;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: maximumActorsReachedException.Title,
+								detail: maximumActorsReachedException.Message,
+								instance: context.Request.Path
+							);
+							break;
 						default:
 							statusCode = StatusCodes.Status500InternalServerError;  // General server error
 							problemDetails = problemDetailsFactory.CreateProblemDetails(

@@ -11,6 +11,7 @@ using MovieCore.Models.Exceptions;
 using MovieCore.Models.Exceptions.BusinessRuleViolationExceptions;
 using Services.Contracts;
 using ServicesContracts.Contracts;
+using System.Diagnostics;
 
 namespace MovieServices.Services;
 
@@ -76,14 +77,26 @@ public class ActorServices : IActorServices
 		if (!actorExists)
 			throw new ActorNotFoundException(actorId);
 
-		if (await IsAlreadyAssignedToMovie(actorId, movieId))
-			throw new DuplicateActorAssignmentException(actorId, movieId);
+		await ValidatingActorBusienessRules(actorId, movieId, movie);
 
 		movie.MovieActors.Add(_mapper.Map<MovieActor>(movieActorCreateDto));
 
 		await _unitOfWork.CompleteAsync();
 
 		return true;
+	}
+
+	private async Task ValidatingActorBusienessRules(int actorId, int movieId, VideoMovie movie)
+	{
+
+		if (await IsAlreadyAssignedToMovie(actorId, movieId))
+			throw new DuplicateActorAssignmentException(actorId, movieId);
+
+		// Documentary has a actor limit of 10
+		int actorCount = 
+			await _unitOfWork.Movies.CountActorsByMovieAndGenreAsync(movieId, movie.MoviesGenre!.Genre);
+		
+		if (actorCount > 9)	throw new MaximumActorsReachedException(movieId);
 	}
 
 	private Task<bool> IsAlreadyAssignedToMovie( int actorId,int movieId) =>

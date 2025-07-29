@@ -21,16 +21,22 @@ public class MovieRepository : RepositoryBase<VideoMovie>, IMovieRepository
 	{
 	}
 
+	public async Task<int> CountActorsByMovieAndGenreAsync(int movieId, string genre) =>
+		await GetByCondition(
+			m => m.Id.Equals(movieId) && 
+			m.MoviesGenre!.Genre.ToLower().Equals(genre.ToLower())
+		).SelectMany(m => m.MovieActors).CountAsync();	
+			
 	public async Task<bool> AnyAsync(int id) => await FindAnyAsync(m => m.Id.Equals(id));
 	
 	public async Task<bool> AnyAsync(string title) => 
 		await FindAnyAsync(m => m.Title.ToLower().Equals(title.ToLower()));
 	
 	public async Task<bool> AlreadyHasMovieDetailsAsync(int movieId) =>
-	await DbSet.AnyAsync(
-		m => m.Id.Equals(movieId) &&
-		m.MoviesDetails!.MovieId.Equals(movieId)
-	);
+		await DbSet.AnyAsync(
+			m => m.Id.Equals(movieId) &&
+			m.MoviesDetails!.MovieId.Equals(movieId)
+		);
 
 	public async Task<IPageList<VideoMovie>> GetAllMoviesAsync(	
 		MovieRequestParameters requestParameters, 

@@ -15,6 +15,7 @@ public interface IMovieRepository : IRepositoryQueries<VideoMovie>, IRepositoryA
 {
 	Task<bool> AnyAsync(int id);
 	Task<bool> AnyAsync(string title);
+	Task<int> CountActorsByMovieAndGenreAsync(int movieId, string genre);
 	Task<bool> AlreadyHasMovieDetailsAsync(int movieId);
 	Task<IPageList<VideoMovie>> GetAllMoviesAsync(
 		MovieRequestParameters requestParameters, 

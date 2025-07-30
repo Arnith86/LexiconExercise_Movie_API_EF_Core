@@ -73,7 +73,7 @@ namespace MovieApi.Controllers
 		/// <param name="actorCreateDto">The data required to create a new actor, including name and birth year.</param>
 		/// <returns>Returns a <see cref="CreatedAtActionResult"/> with the created <see cref="ActorDto"/>.</returns>
 		/// <response code="201">The actor was successfully created.</response>
-		/// <response code="400">The request data is invalid.</response>
+		/// <response code="400">The request data is invalid or if genre is Documentary and actors exceed 10.</response>
 		[HttpPost]
 		[SwaggerOperation(
 			Summary = "Adds a new instance of actor.",

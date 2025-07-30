@@ -141,13 +141,24 @@ public static class ProblemDetailsExceptionHandler
 							);
 							break;
 						case MaximumActorsReachedException
-							 maximumActorsReachedException: // Documentary 10 actor limit reached
+							 maximumActorsReachedException: // Documentary 10 actor limit exceeded 
 							statusCode = StatusCodes.Status400BadRequest;
 							problemDetails = problemDetailsFactory.CreateProblemDetails(
 								context,
 								statusCode,
 								title: maximumActorsReachedException.Title,
 								detail: maximumActorsReachedException.Message,
+								instance: context.Request.Path
+							);
+							break;
+						case MovieDetailsBusinessRuleException
+							 movieDetailsBusinessRuleException: // Documentary 1 million in budget exceeded 
+							statusCode = StatusCodes.Status400BadRequest;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: movieDetailsBusinessRuleException.Title,
+								detail: movieDetailsBusinessRuleException.Message,
 								instance: context.Request.Path
 							);
 							break;

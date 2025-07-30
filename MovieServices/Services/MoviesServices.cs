@@ -139,8 +139,7 @@ public class MoviesServices : IMoviesServices
 
 		if (movie is null) throw new MovieNotFoundException(movieId);
 		
-		if (await DoesMovieHaveDetailsAlready(movieId)) 
-			throw new DuplicateMovieDetailsAssignmentException(movieId);
+		await ValidatingMovieDetailsBusinessRules(movieId, movie, movieDetailsCreateDto);
 
 		MovieDetails movieDetails = _mapper.Map<MovieDetails>(movieDetailsCreateDto);
 
@@ -149,6 +148,27 @@ public class MoviesServices : IMoviesServices
 
 		return true;
 	}
+
+	// ToDo: Extract ValidatingMovieDetailsBusinessRules to its own class.
+	private async Task ValidatingMovieDetailsBusinessRules(
+		int movieId, 
+		VideoMovie movie, 
+		MovieDetailsCreateDto movieDetailsCreateDto)
+	{
+		if (IsDocumentery(movie) && IsWithinDocumenteryBudget(movieDetailsCreateDto))
+			throw new MovieDetailsBusinessRuleException(movieId);
+		 	
+		if (await DoesMovieHaveDetailsAlready(movieId))
+			throw new DuplicateMovieDetailsAssignmentException(movieId);
+	}
+
+	private static bool IsWithinDocumenteryBudget(MovieDetailsCreateDto movieDetailsCreateDto) =>
+		movieDetailsCreateDto.Budget > 1000000;
+	
+
+	private static bool IsDocumentery(VideoMovie movie) =>
+		movie.MoviesGenre!.Genre.ToLower().Equals("documentary");
+	
 
 	private Task<bool> DoesMovieHaveDetailsAlready(int movieId)
 	{

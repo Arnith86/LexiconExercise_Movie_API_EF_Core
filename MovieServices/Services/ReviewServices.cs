@@ -32,8 +32,7 @@ public class ReviewServices : IReviewServices
 			await _unitOfWork.Movies.GetMovieAsync(reviewCreateDto.MovieId, changeTracker: true);
 
 		if (movie is null) throw new MovieNotFoundException(reviewCreateDto.MovieId);
-
-		if (await MoreThenNineReviews(movie)) throw new MaximumReviewsReachedException(movie.Id);
+		await ValidateReviewBusinessRulesAsync(movie, reviewCreateDto);
 
 		Review review = _mapper.Map<Review>(reviewCreateDto);
 
@@ -43,10 +42,24 @@ public class ReviewServices : IReviewServices
 		return _mapper.Map<ReviewDto>(review);
 	}
 
-	private async Task<bool> MoreThenNineReviews(VideoMovie movie)
+	private async Task ValidateReviewBusinessRulesAsync(VideoMovie movie, ReviewCreateDto reviewCreateDto)
 	{
-		return (await _unitOfWork.Reviews.CountReviewsForMovieAsync(movie.Id)) > 9;
+		int maxAllowed = 0;
+
+		if (IsOlderThan20Years(movie)) maxAllowed = 5;
+		else maxAllowed = 10;
+		
+		if (await MoreThenXReviews(movie, maxAllowed))
+			throw new MaximumReviewsReachedException(movie.Id, maxAllowed);
 	}
+
+	// ToDo: Create automatic algorithm that checks if movie is older than 20 years and deletes the oldest reviews while over 5 reviews.
+	private bool IsOlderThan20Years(VideoMovie movie) => (DateTime.Today.Year - movie.Year) > 20;
+
+
+	private async Task<bool> MoreThenXReviews(VideoMovie movie, int maxAllowed) =>
+		(await _unitOfWork.Reviews.CountReviewsForMovieAsync(movie.Id)) >= maxAllowed;
+
 
 	/// <inheritdoc/>
 	public async Task<IEnumerable<ReviewDto>> GetAllReviewsAsync(int movieId)
@@ -54,7 +67,7 @@ public class ReviewServices : IReviewServices
 		var movieExists = await _unitOfWork.Movies.AnyAsync(movieId);
 
 		if (movieExists == false) throw new MovieNotFoundException(movieId);
-		
+
 		return await _unitOfWork.Reviews.GetAllReviewsForMovieAsync(movieId, changeTracker: false);
 	}
 

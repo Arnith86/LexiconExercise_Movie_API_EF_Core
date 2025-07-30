@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.ActorDTOs;
 using MovieCore.Models.DTOs.MovieActorDto;
-using MovieCore.Models.Entities;
 using Services.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json;
@@ -73,7 +72,7 @@ namespace MovieApi.Controllers
 		/// <param name="actorCreateDto">The data required to create a new actor, including name and birth year.</param>
 		/// <returns>Returns a <see cref="CreatedAtActionResult"/> with the created <see cref="ActorDto"/>.</returns>
 		/// <response code="201">The actor was successfully created.</response>
-		/// <response code="400">The request data is invalid or if genre is Documentary and actors exceed 10.</response>
+		/// <response code="400">The request data is invalid or if genre is Documentary and actors excceed 10.</response>
 		[HttpPost]
 		[SwaggerOperation(
 			Summary = "Adds a new instance of actor.",

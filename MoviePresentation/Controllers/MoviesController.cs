@@ -154,7 +154,7 @@ public class MoviesController : ControllerBase
 	/// </param>
 	/// <returns><see cref="NoContentResult"/> if successfully linked; otherwise, appropriate error responses.</returns>
 	/// <response code="204">The movie details were successfully linked to the specified movie.</response>
-	/// <response code="400">The request body was invalid or movie already has movie details.</response>
+	/// <response code="400">The request body was invalid, movie already has movie details or business rule is broken.</response>
 	/// <response code="404">The specified movie could not be found.</response>
 	[HttpPost("details")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]

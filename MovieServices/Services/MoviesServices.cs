@@ -79,7 +79,7 @@ public class MoviesServices : IMoviesServices
 		var genre = await _unitOfWork.MovieGenres.AnyAsync(movieCreateDto.MovieGenreId);
 		if (!genre) throw new MovieGenreNotFoundException(movieCreateDto.MovieGenreId);
 
-		if (await DoesTitleAlreadyExist(movieCreateDto))
+		if (await DoesTitleAlreadyExistAsync(movieCreateDto))
 			throw new DuplicateMovieTitleArgumentException(movieCreateDto.Title);
 
 		VideoMovie movie = _mapper.Map<VideoMovie>(movieCreateDto);
@@ -90,7 +90,7 @@ public class MoviesServices : IMoviesServices
 		return (_mapper.Map<MovieWithGenreIdDto>(movie), movie.Id);
 	}
 
-	private async Task<bool> DoesTitleAlreadyExist(MovieCreateDto movieCreateDto) =>
+	private async Task<bool> DoesTitleAlreadyExistAsync(MovieCreateDto movieCreateDto) =>
 		await _unitOfWork.Movies.AnyAsync(movieCreateDto.Title);
 	
 
@@ -139,7 +139,7 @@ public class MoviesServices : IMoviesServices
 
 		if (movie is null) throw new MovieNotFoundException(movieId);
 		
-		await ValidatingMovieDetailsBusinessRules(movieId, movie, movieDetailsCreateDto);
+		await ValidatingMovieDetailsBusinessRulesAsync(movieId, movie, movieDetailsCreateDto);
 
 		MovieDetails movieDetails = _mapper.Map<MovieDetails>(movieDetailsCreateDto);
 
@@ -149,8 +149,8 @@ public class MoviesServices : IMoviesServices
 		return true;
 	}
 
-	// ToDo: Extract ValidatingMovieDetailsBusinessRules to its own class.
-	private async Task ValidatingMovieDetailsBusinessRules(
+	// ToDo: Extract ValidatingMovieDetailsBusinessRulesAsync to its own class.
+	private async Task ValidatingMovieDetailsBusinessRulesAsync(
 		int movieId, 
 		VideoMovie movie, 
 		MovieDetailsCreateDto movieDetailsCreateDto)
@@ -162,16 +162,14 @@ public class MoviesServices : IMoviesServices
 			throw new DuplicateMovieDetailsAssignmentException(movieId);
 	}
 
-	private static bool IsWithinDocumenteryBudget(MovieDetailsCreateDto movieDetailsCreateDto) =>
+	private bool IsWithinDocumenteryBudget(MovieDetailsCreateDto movieDetailsCreateDto) =>
 		movieDetailsCreateDto.Budget > 1000000;
 	
 
-	private static bool IsDocumentery(VideoMovie movie) =>
+	private bool IsDocumentery(VideoMovie movie) =>
 		movie.MoviesGenre!.Genre.ToLower().Equals("documentary");
 	
 
-	private Task<bool> DoesMovieHaveDetailsAlready(int movieId)
-	{
-		return _unitOfWork.Movies.AlreadyHasMovieDetailsAsync(movieId);
-	}
+	private Task<bool> DoesMovieHaveDetailsAlready(int movieId) =>
+		_unitOfWork.Movies.AlreadyHasMovieDetailsAsync(movieId);
 }

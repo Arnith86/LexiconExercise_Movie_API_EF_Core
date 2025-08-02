@@ -27,6 +27,19 @@ public class MapperProfile : Profile
 		CreateMap<VideoMovie, MovieWithGenreIdDto>();
 		CreateMap<MovieWithGenreIdUpdateDto, VideoMovie>();
 		CreateMap<MovieActorCreateDto, MovieActor>();
+
+		//CreateMap<VideoMovie, MoviePatchDto>()
+			//.ForMember(dest => dest.MovieId, opt => opt.MapFrom(src => src.Id))
+			//.ForMember(dest => dest.MovieGenreId, opt => opt.MapFrom(src => src.MoviesGenre!.Id));
+		
+		CreateMap<VideoMovie, MovieWithMovieDetailsPatchDto>()
+			.ForMember(dest => dest.MovieId, opt => opt.MapFrom(src => src.Id))
+			.ForMember(dest => dest.MovieGenreId, opt => opt.MapFrom(src => src.MoviesGenre!.Id))
+			.ForMember(dest => dest.MovieDetailsId, opt => opt.MapFrom(src => src.MoviesDetails!.Id))
+			.ForMember(dest => dest.Synopsis, opt => opt.MapFrom(src => src.MoviesDetails!.Synopsis))
+			.ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.MoviesDetails!.Language))
+			.ForMember(dest => dest.Budget, opt => opt.MapFrom(src => src.MoviesDetails!.Budget))
+			.ReverseMap(); 
 		
 		// MovieDitails profiles
 		CreateMap<MovieDetailsCreateDto, MovieDetails>();

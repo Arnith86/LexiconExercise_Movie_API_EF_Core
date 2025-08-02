@@ -39,7 +39,8 @@ namespace MovieApi
 
 			builder.Services.AddControllers()
 				// Makes ASP.NET Core look for controllers in another project (MoviePresentation in this case).
-				.AddApplicationPart(typeof(AssemblyReference).Assembly);
+				.AddApplicationPart(typeof(AssemblyReference).Assembly)
+				.AddNewtonsoftJson();
 
 			// "AddScoped" is chosen, because context is scoped. As such the lifetime of the service needs
 			// to match. 

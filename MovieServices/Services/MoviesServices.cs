@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: Dto
 
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using MovieCore.DomainContracts;
 using MovieCore.DomainContracts.RequestParameters;
@@ -165,11 +166,35 @@ public class MoviesServices : IMoviesServices
 	private bool IsWithinDocumenteryBudget(MovieDetailsCreateDto movieDetailsCreateDto) =>
 		movieDetailsCreateDto.Budget > 1000000;
 	
-
+	// ToDo: create class with movie genre constants
 	private bool IsDocumentery(VideoMovie movie) =>
 		movie.MoviesGenre!.Genre.ToLower().Equals("documentary");
 	
 
 	private Task<bool> DoesMovieHaveDetailsAlready(int movieId) =>
 		_unitOfWork.Movies.AlreadyHasMovieDetailsAsync(movieId);
+
+	/// <inheritdoc/>
+	public async Task<MovieWithMovieDetailsPatchDto> GetMovieWithMovieDetailsPatchDtoAsync(int movieId)
+	{
+		VideoMovie? movie = await _unitOfWork.Movies.GetMovieDetailsAsync(movieId);
+
+		if (movie is null) throw new MovieNotFoundException(movieId);
+		if (movie.MoviesDetails is null) throw new MovieDetailsNotLinkedException(movieId);
+
+		return _mapper.Map<MovieWithMovieDetailsPatchDto>(movie);
+	}
+
+	/// <inheritdoc/>
+	public async Task ApplyMovieWithDetailsPatchAsync(
+		int movieId, 
+		MovieWithMovieDetailsPatchDto patchDto)
+	{
+		VideoMovie? movie = await _unitOfWork.Movies.GetMovieDetailsAsync(movieId, changeTracker: true);
+
+		if (movie is null) throw new MovieNotFoundException(movieId);
+		_mapper.Map/*<VideoMovie>*/(patchDto, movie);
+
+		await _unitOfWork.CompleteAsync();
+	}
 }

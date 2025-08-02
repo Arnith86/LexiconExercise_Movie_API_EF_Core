@@ -1,9 +1,11 @@
 ﻿// Ignore Spelling: Dto
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.MovieDtos;
+using MovieCore.Models.Exceptions;
 using Services.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json;
@@ -214,6 +216,30 @@ public class MoviesController : ControllerBase
 	public async Task<IActionResult> DeleteMovie(int id)
 	{
 		await _serviceManager.MovieServices.RemoveMovieAsync(id);
+		return NoContent();
+	}
+
+	// PATCH: api/Movies/5
+	[HttpPatch("{id}")]
+	public async Task<IActionResult> PatchMovieWithMovieDetails(
+		int id,
+		[FromBody]JsonPatchDocument<MovieWithMovieDetailsPatchDto> patchDocument)
+	{
+		if (patchDocument is null) throw new MissingPatchDocumentException();
+
+		var movieToPatchDto = 
+			await _serviceManager.MovieServices.GetMovieWithMovieDetailsPatchDtoAsync(id);
+
+		patchDocument.ApplyTo(
+			movieToPatchDto, ModelState
+		);
+
+		TryValidateModel(movieToPatchDto);
+
+		if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
+
+		await _serviceManager.MovieServices.ApplyMovieWithDetailsPatchAsync(id, movieToPatchDto);
+
 		return NoContent();
 	}
 }

@@ -53,7 +53,7 @@ public class ReviewServices : IReviewServices
 			throw new MaximumReviewsReachedException(movie.Id, maxAllowed);
 	}
 
-	// ToDo: Create automatic algorithm that checks if movie is older than 20 years and deletes the oldest reviews while over 5 reviews.
+	// ToDo: Create automatic algorithm that checks every 10 minutes, if movie is older than 20 years and deletes the oldest reviews while over 5 reviews.
 	private bool IsOlderThan20Years(VideoMovie movie) => (DateTime.Today.Year - movie.Year) > 20;
 
 

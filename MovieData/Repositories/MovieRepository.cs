@@ -51,7 +51,7 @@ public class MovieRepository : RepositoryBase<VideoMovie>, IMovieRepository
 				.FirstOrDefaultAsync();
 
 	public async Task<VideoMovie?> GetMovieDetailsAsync(int id, bool changeTracker = false) =>
-		await GetByCondition(gmd => gmd.Id.Equals(id))
+		await GetByCondition(gmd => gmd.Id.Equals(id), changeTracker)
 				.Include(md => md.MoviesDetails)
 				.Include(mg => mg.MoviesGenre)
 				.FirstOrDefaultAsync();

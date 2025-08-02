@@ -78,6 +78,16 @@ public static class ProblemDetailsExceptionHandler
 								instance: context.Request.Path
 							);
 							break;
+						case MovieDetailsNotLinkedException movieDetailsNotLinkedException: // No movieDetails linked to movie
+							statusCode = StatusCodes.Status400BadRequest;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: movieDetailsNotLinkedException.Title,
+								detail: movieDetailsNotLinkedException.Message,
+								instance: context.Request.Path
+							);
+							break;
 						case PaginationArgumentOutOfRangeException argumentOutOfRangeException: // Paging parameters out of range
 							statusCode = StatusCodes.Status400BadRequest;
 							problemDetails = problemDetailsFactory.CreateProblemDetails(
@@ -159,6 +169,17 @@ public static class ProblemDetailsExceptionHandler
 								statusCode,
 								title: movieDetailsBusinessRuleException.Title,
 								detail: movieDetailsBusinessRuleException.Message,
+								instance: context.Request.Path
+							);
+							break;
+						case MissingPatchDocumentException
+							 missingPatchDocumentException: // Patch Documentation = null
+							statusCode = StatusCodes.Status400BadRequest;
+							problemDetails = problemDetailsFactory.CreateProblemDetails(
+								context,
+								statusCode,
+								title: missingPatchDocumentException.Title,
+								detail: missingPatchDocumentException.Message,
 								instance: context.Request.Path
 							);
 							break;

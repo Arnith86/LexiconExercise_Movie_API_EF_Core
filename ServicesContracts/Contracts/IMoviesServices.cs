@@ -1,4 +1,5 @@
-﻿using MovieCore.DomainContracts.RequestParameters;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using MovieCore.DomainContracts.RequestParameters;
 using MovieCore.Models.DTOs.MovieDtos;
 
 namespace Services.Contracts.Contracts;
@@ -16,7 +17,7 @@ public interface IMoviesServices
 	/// <param name="trackChanges">Indicates whether to track changes in the underlying entities (default is <c>false</c>).</param>
 	/// <returns>
 	/// A tuple containing a collection of <see cref="MovieWithGenreDto"/> and 
-	/// pagination metadata implementing <see cref="IPaginationMetaData"/>.
+	/// pagination meta-data implementing <see cref="IPaginationMetaData"/>.
 	/// </returns>
 	Task<(IEnumerable<MovieWithGenreDto> moviesWithGenreDto, IPaginationMetaData metaData)> GetAllMoviesAsync(
 		MovieRequestParameters requestParameters,
@@ -71,6 +72,21 @@ public interface IMoviesServices
 	/// <param name="movieWithGenreIdUpdateDto">The updated movie data.</param>
 	/// <returns><c>true</c> if the update was successful.</returns>
 	Task<bool> UpdateMovieAsync(int id, MovieWithGenreIdUpdateDto movieWithGenreIdUpdateDto);
+
+	/// <summary>
+	/// Gets a PatchDto representing a movie with Genre and movie details. 
+	/// </summary>
+	/// <param name="movieId">The ID of the movie to get.</param>
+	/// <returns>True, if updating operation was successful.</returns>
+	Task<MovieWithMovieDetailsPatchDto> GetMovieWithMovieDetailsPatchDtoAsync(int movieId);
+
+	/// <summary>
+	/// Applies a patch to a movie and its associated details using the provided patch DTO.
+	/// </summary>
+	/// <param name="movieId">The ID of the movie to update.</param>
+	/// <param name="patchDto">The patch data containing the updated fields.</param>
+	/// <returns>A task representing the asynchronous operation.</returns>
+	Task ApplyMovieWithDetailsPatchAsync(int movieId, MovieWithMovieDetailsPatchDto patchDto);
 
 	/// <summary>
 	/// Removes a movie by its ID.

@@ -35,11 +35,13 @@ public class MoviesController : ControllerBase
 	/// <param name="page">The page number to retrieve.</param>
 	/// <returns>A paginated list of movies with basic information and genre.</returns>
 	/// <response code="200">Returns the paginated list of movies successfully.</response>
+	/// <response code="400">Is thrown if pagination parameters were out of scope.</response>
 	[HttpGet]
 	[SwaggerOperation(
 		Summary = "Retrieve all movies",
 		Description = "Returns a simplified list of all registered movies including basic details and genre.")]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MovieWithGenreDto>))]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
 	public async Task<ActionResult<IEnumerable<MovieWithGenreDto>>> GetMovies(
 		[FromQuery] MovieRequestParameters requestParameters)
 	{

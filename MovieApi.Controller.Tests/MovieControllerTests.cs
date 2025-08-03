@@ -64,7 +64,7 @@ namespace MovieApi.Controller.Tests
 		/// when an invalid movie ID is provided.
 		/// </summary>
 		[Fact]
-		public async Task GetMovie_ShouldReturn_StatusThrow_MovieNotFoundException()
+		public async Task GetMovie_ShouldReturn_StatusThrow_StatusCode404_MovieNotFoundException()
 		{
 			// Arrange
 			_mockServiceManager
@@ -85,7 +85,13 @@ namespace MovieApi.Controller.Tests
 		{
 			// Arrange 
 			var moviesWithGenre = await GetMoviesWithGenre();
-			SetupValidPaginationMetaData();
+
+			_mockPaginationMetaDate.SetupGet(pmd => pmd.CurrentPage).Returns(1);
+			_mockPaginationMetaDate.SetupGet(pmd => pmd.PageSize).Returns(5);
+			_mockPaginationMetaDate.SetupGet(pmd => pmd.TotalItemCount).Returns(_c_MoviesCreateDefault_10);
+			_mockPaginationMetaDate.SetupGet(pmd => pmd.TotalPages).Returns(2);
+			_mockPaginationMetaDate.SetupGet(pmd => pmd.hasPrevious).Returns(false);
+			_mockPaginationMetaDate.SetupGet(pmd => pmd.hasNext).Returns(true);
 
 			_movieRequestParameter.PageNumber = 1;
 			_movieRequestParameter.PageSize = 5;
@@ -94,7 +100,7 @@ namespace MovieApi.Controller.Tests
 				.Setup(sm => sm.MovieServices.GetAllMoviesAsync(_movieRequestParameter, false))
 				.ReturnsAsync((moviesWithGenre, _mockPaginationMetaDate.Object));
 
-			_sut.SetupDefaultHttpContext(); // want to access here but cannot 
+			_sut.SetupDefaultHttpContext();
 
 			// Act 
 			var result = await _sut.GetMovies(_movieRequestParameter);
@@ -112,14 +118,21 @@ namespace MovieApi.Controller.Tests
 			Assert.Equal(moviesWithGenre, resultType.Value);
 		}
 
-		private void SetupValidPaginationMetaData()
+		/// <summary>
+		/// Ensures that the controller correctly propagates the PaginationArgumentOutOfRangeException
+		/// when invalid pagination parameters are passed to the service layer.
+		/// </summary>
+		[Fact]
+		public async Task GetMovies_ShouldThrow_StatusCode400_PaginationArgumentOutOfRangeException()
 		{
-			_mockPaginationMetaDate.SetupGet(pmd => pmd.CurrentPage).Returns(1);
-			_mockPaginationMetaDate.SetupGet(pmd => pmd.PageSize).Returns(5);
-			_mockPaginationMetaDate.SetupGet(pmd => pmd.TotalItemCount).Returns(_c_MoviesCreateDefault_10);
-			_mockPaginationMetaDate.SetupGet(pmd => pmd.TotalPages).Returns(2);
-			_mockPaginationMetaDate.SetupGet(pmd => pmd.hasPrevious).Returns(false);
-			_mockPaginationMetaDate.SetupGet(pmd => pmd.hasNext).Returns(true);
+			// Arrange 
+				_mockServiceManager
+				.SetupSequence(sm => sm.MovieServices.GetAllMoviesAsync(_movieRequestParameter, false))
+				.ThrowsAsync(new PaginationArgumentOutOfRangeException(It.IsAny<string>()));
+
+			// Act & Assert 
+			var exception = await Assert.ThrowsAsync<PaginationArgumentOutOfRangeException>(() =>
+				_sut.GetMovies(_movieRequestParameter));
 		}
 
 		private async Task<MovieWithGenreDto> GetMovieWithGenre()
